@@ -1,0 +1,165 @@
+.game-wrapper {
+  position: fixed;
+  width: 20%;
+  top: 65px;
+  left: 0;
+  bottom: 0;
+  border-right: 1px solid black;
+  overflow-x: auto;
+}
+.game-wrapper ul,
+.score-board-wrapper ul.team-list{
+  margin:0;
+  padding: 4px;
+}
+.game-wrapper ul li,
+.score-board-wrapper ul li {
+  list-style: none;
+  padding: 8px 0;
+  border-bottom: 1px dotted #222;
+  cursor: pointer;
+}
+.game-wrapper ul li:hover {
+  background-color: #efefef;
+}
+.game-wrapper ul li.asked,
+.game-wrapper ul li.asked:hover {
+  background-color: #8e8e8e;
+  max-height: 1rem;
+  overflow: hidden;
+}
+
+.game-wrapper ul li.active-question {
+   background-color: rgba(14, 142, 8, 0.51);
+}
+
+.main-wrapper {
+  position: fixed;
+  width: 57.5%;
+  top: 65px;
+  left: 20%;
+  padding: 0 12px;
+  bottom: 0;
+  height: 100%;
+}
+.question-display {
+  height: 70%;
+  display: block;
+  overflow: auto;
+}
+.answer-reveal-ui {
+  align-content: center;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.spoiler {
+  background-color: black;
+}
+.spoiler:hover {
+  background-color: white;
+}
+.spoiler p {
+  margin: 2px;
+}
+
+.answer-reveal-ui > div {
+  margin-right: 14px;
+  display: inline-block;
+}
+.received-heading {
+  margin-top: 8px;
+  display: block;
+  background-color: #1d2864;
+  color: white;
+}
+.answer-validity-ui {
+  cursor: pointer;
+}
+.correct-answer-indicator,
+.answer-validity-ui.right:hover {
+  color: green;
+}
+.wrong-answer-indicator,
+.answer-validity-ui.wrong:hover {
+  color: red;
+}
+.screen-controls {
+  height: 30%;
+  display: block;
+  position: relative;
+  border-top: 1px solid black;
+}
+.control-wrapper {
+  width: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 84px;
+  overflow: auto;
+}
+.log-wrapper {
+  width: 50%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 84px;
+  overflow: auto;
+}
+.log-wrapper p {
+  margin: 0;
+}
+.log-wrapper p:nth-child(odd) {
+  background-color: #efefef;
+}
+
+.timer-display-wrapper {
+  background-color: #1d1d1d;
+  border: 2px solid black;
+  width: 150px;
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+}
+.timer-display {
+  font-size: 2rem;
+  display: block;
+  font-family: monospace;
+  width: 100%;
+  color: white;
+  margin-top: 0;
+}
+.time-is-short {
+  color: red;
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+
+.score-board-wrapper {
+  position: fixed;
+  width: 20%;
+  top: 65px;
+  left: 80%;
+  bottom: 0;
+  border-left: 1px solid black;
+}
+.score-board-wrapper ul li button {
+  float: right;
+}
+.score-board-wrapper ul li:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.score-board-wrapper ul li b {
+  line-height: 44px;
+}

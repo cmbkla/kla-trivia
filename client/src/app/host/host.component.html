@@ -1,0 +1,102 @@
+<div class="game-wrapper">
+  <h4 *ngIf="questionCategories.length > 0">Questions:</h4>
+
+  <mat-accordion *ngIf="questionCategories.length > 0">
+    <mat-expansion-panel *ngFor="let category of questionCategories">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{category.name}}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ul>
+        <li [ngClass]="{'asked': question.asked, 'active-question': activeQuestion && question.id === activeQuestion.id}" (click)="openQuestion(question.id)" *ngFor="let question of category.questions">
+          <b>{{question.title}}</b>
+        </li>
+      </ul>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <p *ngIf="questions.length == 0 && !questionsLoading">No questions loaded</p>
+  <button color="primary" mat-raised-button (click)="importQuestions()" *ngIf="questions.length == 0 && !questionsLoading">Import Questions</button>
+
+  <p *ngIf="questionsLoading">loading questions</p>
+  <mat-spinner *ngIf="questionsLoading"></mat-spinner>
+
+</div>
+
+<div class="main-wrapper">
+  <div class="question-display">
+    <div *ngIf="!activeQuestion">
+      <p>Select a question</p>
+    </div>
+    <div *ngIf="activeQuestion">
+      <p>{{activeQuestion.title}}</p>
+
+      <div *ngIf="activeQuestion && activeQuestion.type === 'choice' && !activeQuestion.started && activeQuestion.asked" class="answer-reveal-ui">
+        <div *ngFor="let choice of activeQuestion.choices">
+          <mat-checkbox (click)="revealChoice(choice)" class="example-margin">{{choice.value}}</mat-checkbox>
+        </div>
+      </div>
+
+      <div *ngIf="activeQuestion && activeQuestion.started" [ngClass]="{'spoiler': !activeQuestion.answerDisplayed}" class="answer-reveal-ui spoiler">
+        <p>Answer: {{getAnswerText()}}</p>
+      </div>
+
+      <strong class="received-heading">Received answers</strong>
+      <table>
+        <thead>
+          <tr>
+            <th>Team</th>
+            <th style="width:60%">Answer</th>
+            <th style="width: 72px;">Correct</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let teamAnswer of activeQuestion.teamAnswers">
+            <td>{{teamAnswer.team.name}}</td>
+            <td>{{teamAnswer.answer}}</td>
+            <td>
+
+              <mat-icon class="correct-answer-indicator" *ngIf="teamAnswer.correct === 'Y'">check circle</mat-icon>
+              <mat-icon class="wrong-answer-indicator" *ngIf="teamAnswer.correct === 'N'">cancel</mat-icon>
+
+              <mat-icon (click)="markAnswer(teamAnswer, 'Y')" class="answer-validity-ui right" *ngIf="teamAnswer.correct === '?'">check circle</mat-icon>
+              <mat-icon (click)="markAnswer(teamAnswer, 'N')" class="answer-validity-ui wrong" *ngIf="teamAnswer.correct === '?'">cancel</mat-icon>
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="screen-controls">
+    <div class="control-wrapper">
+      <div *ngIf="!gameIsComplete()">{{getRoundAndQuestionNumber()}} <ng-container *ngIf="isDoubler()">DOUBLE OR NOTHING</ng-container></div>
+      <div *ngIf="gameIsComplete()">Game Complete</div>
+      <p>
+        <button color="primary" mat-raised-button (click)="advanceQuestionState()" *ngIf="getQuestionState() && !gameIsComplete()">{{stateLabel}}</button>
+        <button color="primary" mat-raised-button (click)="updateScoreAndShowLeaderboard()" *ngIf="gameIsComplete()">Show Final Leaderboard</button>
+        <button color="secondary" [ngClass]="{'mat-warn': newGameConfirm}" mat-raised-button (click)="createNewGame()">New Game</button>
+      </p>
+      <div class="timer-display-wrapper" *ngIf="activeQuestion && activeQuestion.started && !activeQuestion.timerDone">
+        <span [ngClass]="{'time-is-short': timeIsShort()}" class="timer-display">{{formatTimer()}}</span>
+      </div>
+    </div>
+    <div class="log-wrapper">
+      <h4>log</h4>
+      <p *ngFor="let message of messages.slice().reverse()">
+        <b>{{message.from.name}}</b> <span>{{translateMessageTypeToText(message.type)}}</span>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="score-board-wrapper">
+  <h4>Teams:</h4>
+  <ul class="team-list">
+    <li *ngFor="let team of teams">
+      <b>{{team.name}}</b> <button mat-mini-fab class="primary">{{team.score}}</button>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,38 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+  margin: 0;
+}
+
+table {
+  width: 100%;
+  max-width: 100%;
+  margin-bottom: 20px;
+}
+
+table > thead > tr > th,
+table > tbody > tr > th,
+table > tfoot > tr > th {
+  text-align: left;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td,
+table > tfoot > tr > th,
+table > tfoot > tr > td {
+  padding: 10px;
+  line-height: 1.429;
+}
+
+table > thead > tr > th {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.12);
+  font-weight: 700;
+  padding: 0;
+  font-size: 0.8rem;
+  color: #7f7f7f;
+}
+
+table > tbody + tbody {
+  border-top: 2px solid rgba(0, 0, 0, 0.12);
+}

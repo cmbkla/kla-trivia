@@ -1,0 +1,111 @@
+
+[mat-fab] {
+    position: absolute;
+    right: 2%;
+    top: 35px;
+    z-index: 1;
+}
+.team-name-display {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  margin: 0;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.question-container {
+  position: fixed;
+  width: 100%;
+  left: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  top: 56px;
+  bottom: 0px;
+  padding-bottom: 70px;
+}
+.question-waiting,
+.question-title {
+  text-align: center;
+}
+.question-type-wrapper {
+  width: 90%;
+}
+.example-radio-group {
+  display: inline-flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0 20px;
+}
+.example-radio-button {
+  width: 100%;
+}
+.question-image {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.mat-radio-checked {
+  background-color: #bfefc0;
+}
+.answer-submit-button-wrapper {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 50;
+}
+.answer-input {
+  width: 100%;
+  margin-left: 4%;
+  margin-top: 20px;
+}
+.answer-submit-button-wrapper button {
+  width: 100%;
+  zoom: 150%;
+}
+/deep/ .mat-radio-label {
+  padding: 12px 0;
+  width: 100%;
+}
+
+
+.timer-display-wrapper {
+  background-color: #1d1d1d;
+  border: 2px solid black;
+  width: 150px;
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  position: absolute;
+  top: 1.4%;
+  left: 120px;
+}
+.timer-display {
+  font-size: 1.4rem;
+  display: block;
+  font-family: monospace;
+  width: 100%;
+  color: #fafafa;
+  margin-top: 0;
+}
+.time-is-short {
+  color: red;
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+
+.game-general-message {
+  text-align: center;
+  padding: 20% 6%
+}

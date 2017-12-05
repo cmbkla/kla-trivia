@@ -1,0 +1,57 @@
+<button *ngIf="user" mat-fab>
+  {{user.score}}
+</button>
+<div class="timer-display-wrapper" *ngIf="question && question.started && !question.timerDone">
+  <span [ngClass]="{'time-is-short': timeIsShort()}" class="timer-display">{{formatTimer()}}</span>
+</div>
+<div class="question-container">
+  <div *ngIf="(question == null && !answerSubmitted) || question != null && !question.asked">
+    <h2 class="question-waiting">Waiting for question...</h2>
+  </div>
+  <div class="question-type-wrapper" *ngIf="question != null && !answerSubmitted && !question.timerDone && !question.answerDisplayed && question.asked">
+    <h2 class="question-title">{{question.title}}</h2>
+    <div *ngIf="question.type == 'choice'">
+      <mat-radio-group class="example-radio-group" [(ngModel)]="questionAnswer">
+        <div *ngFor="let choice of question.choices">
+          <mat-radio-button [disabled]="!question.started" *ngIf="choice.revealed" class="example-radio-button" [value]="choice.letter">
+            <button mat-mini-fab color="primary">{{choice.letter}}</button> {{choice.value}}
+          </mat-radio-button>
+        </div>
+      </mat-radio-group>
+    </div>
+    <div *ngIf="question.type == 'picture'">
+      <img class="question-image" [src]="this.questionImage" />
+
+      <mat-input-container class="answer-input">
+        <input
+               autocomplete="false"
+               matInput
+               [disabled]="!question.started"
+               #inputMessage
+               maxlength="140"
+               placeholder="Type your answer"
+               [(ngModel)]="questionAnswer"
+               (keyup.enter)="submitAnswer()">
+        <mat-hint align="end">{{inputMessage.value.length}}/140</mat-hint>
+      </mat-input-container>
+
+    </div>
+  </div>
+  <div class="game-general-message" *ngIf="answerSubmitted && question && !question.answerDisplayed">
+    <h3>Waiting on other teams...</h3>
+  </div>
+  <div class="game-general-message" *ngIf="question && question.timerDone && !question.answerDisplayed">
+    <h3>Time's Up!</h3>
+  </div>
+  <div class="game-general-message" *ngIf="question && question.answerDisplayed">
+    <h3>{{question.title}}</h3>
+
+    <h2>{{getAnswerText()}}</h2>
+
+    <p *ngIf="questionAnswer && questionAnswer.length > 0">Your team answered: {{getTeamAnswerText()}}</p>
+    <p *ngIf="!questionAnswer || questionAnswer.length === 0">Your team did not answer</p>
+  </div>
+  <div *ngIf="question != null && !answerSubmitted && !question.timerDone && !question.answerDisplayed" class="answer-submit-button-wrapper">
+    <button (click)="submitAnswer()" [disabled]="question == null || (!questionAnswer || questionAnswer.length == 0) || answerSubmitted" mat-raised-button color="accent">Submit Answer</button>
+  </div>
+</div>
