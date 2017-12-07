@@ -66,7 +66,7 @@ export class Server {
             let postData = {
                 grant_type: 'authorization_code',
                 code: req.params.code,
-                redirect_uri: 'http://192.168.1.100:8080/token',
+                redirect_uri: 'http://192.168.1.98:8080/token',
                 client_id: '62a8dc0ad3224977a880734a85a3c92a',
                 client_secret: '4d964a1c589d417581330da90b4a36c1'
             };
