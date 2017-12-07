@@ -854,7 +854,7 @@ export class HostComponent implements OnInit {
 
   private startSpotifyPlayback() {
     this.spotifyPlayState = 'playing';
-    let questionIndex = this.game.length;
+    let questionIndex = this.game.length + 1;
     this.timeLeft = Math.ceil(this.spotifyTrackList[questionIndex].track.duration_ms / 1000);
     this.makeSpotifyPlayerApiCall(
       'put',
