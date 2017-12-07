@@ -124,6 +124,7 @@ export class DisplayComponent implements OnInit {
     if (this.timerInterval != null) {
       this.timerInterval.unsubscribe();
       this.timerInterval = null;
+      this.timerStarted = false;
     }
   }
 

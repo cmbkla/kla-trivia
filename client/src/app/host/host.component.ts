@@ -77,7 +77,6 @@ export class HostComponent implements OnInit {
           this.activeQuestion = JSON.parse(storedActiveQuestion);
           if (this.activeQuestion != null && this.activeQuestion.started) {
             this.timeLeft = parseInt(localStorage.getItem('timerLeft'));
-            console.log('starting timer based on localStorage data', this.activeQuestion);
             this.startQuestionTimer();
           }
         }
@@ -378,7 +377,7 @@ export class HostComponent implements OnInit {
         if (this.timeLeft > 0) {
           this.timerTick(t)
         } else {
-          this.resetTimer();
+          this.timerIsDone();
         }
       }.bind(this),
       function (err) {
@@ -397,8 +396,8 @@ export class HostComponent implements OnInit {
     }
     this.activeQuestion.timerDone = true;
     this.storeGameData();
-    this.resetTimer();
     this.sendNotification(MessageType.QUESTION, this.activeQuestion);
+    this.resetTimer();
   }
 
   // handle tick for game timer, send a TIMER_SYNC once there is less than 15 seconds
@@ -417,9 +416,6 @@ export class HostComponent implements OnInit {
           function (result) {
             this.timeLeft = Math.ceil(((<any>result).item.duration_ms - (<any>result).progress_ms) / 1000);
             this.sendNotification(MessageType.TIMER_SYNC, this.timeLeft);
-            if (this.timeLeft <= 0) {
-              this.timerIsDone();
-            }
           }.bind(this)
         );
       } else {
@@ -639,7 +635,6 @@ export class HostComponent implements OnInit {
                   [questions[i], questions[j]] = [questions[j], questions[i]];
                 }
 
-                //console.log(questions);
                 questions.forEach(function (question) {
                   categoryCount++;
                   if (categoryCount >= categoryMax) {
@@ -671,7 +666,7 @@ export class HostComponent implements OnInit {
                   let answerTooLong = false;
                   Object.keys(question).forEach(function (questionLineIndex) {
                     let questionLine = question[questionLineIndex];
-                    //console.log('parsing question line', questionLine);
+
                     if (
                       questionLine.substr(0, 1) == 'A' ||
                       questionLine.substr(0, 1) == 'B' ||
@@ -680,7 +675,7 @@ export class HostComponent implements OnInit {
                       questionLine.substr(0, 1) == 'E' ||
                       questionLine.substr(0, 1) == 'F'
                     ) {
-                      //console.log('-this line looks like a choice');
+
                       questionObj.choices.push(<QuestionChoices>{
                         value: questionLine.substr(2),
                         letter: questionLine.substr(0, 1)
@@ -689,26 +684,22 @@ export class HostComponent implements OnInit {
                         answerTooLong = true;
                       }
                     } else if (questionLine.substr(0, 1) == '^') {
-                      //console.log('-this line looks like the answer text');
+
                       answerText = questionLine.substr(2);
                     } else if (
                       questionLine.substr(0, 1) == '%'
                     ) {
-                      //console.log('-this line looks like a picture');
                       questionObj.picture = questionLine.substr(2);
                       questionObj.type = 'picture';
                     } else {
-                      //console.log('-this line looks like part of the question');
                       questionText += questionLine;
                     }
                   });
 
                   if (questionObj.choices.length < 3 && questionObj.type !== 'picture') {
-                    //console.log('rejected question for too few choices', questionText);
                     return true;
                   }
                   if (questionText.length > 200 || answerTooLong) {
-                    //console.log('rejected question for question or answer text that was too long', questionText);
                     return true;
                   }
 
@@ -721,7 +712,6 @@ export class HostComponent implements OnInit {
                   if (questionObj.type != 'picture') {
                     let answerChoice = questionObj.choices.find(choice => choice.value === answerText)
                     if (!answerChoice) {
-                      //console.log('rejected question because could not determine answer letter');
                       return true;
                     }
                     questionObj.answer = answerChoice.letter;
@@ -734,7 +724,6 @@ export class HostComponent implements OnInit {
 
                 categoryComplete++;
                 if (categoryComplete == validCategories.length) {
-                  //console.log('done, building categories', this.questions);
                   this.buildCategories();
                   this.storeGameData();
                 }

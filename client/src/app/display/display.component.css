@@ -16,7 +16,7 @@
   display: block;
   margin-right: auto;
   margin-left: auto;
-  min-width: 50%;
+  width: 50%;
   box-shadow: 6px 10px 12px rgba(0,0,0,0.3);
   border: 4px solid #1d1223;
   margin-top: -2%;

@@ -167,6 +167,7 @@ export class ChatComponent implements OnInit {
 
   private resetTimer() {
     if (this.timerInterval != null) {
+      this.timerStarted = false;
       this.timerInterval.unsubscribe();
       this.timerInterval = null;
     }
@@ -177,7 +178,6 @@ export class ChatComponent implements OnInit {
       return true;
     }
     this.resetTimer();
-    this.timerStarted = true;
     this.timerStarted = true;
     let interval = Observable.timer(0, 1000)
       .take(this.timeLeft);
