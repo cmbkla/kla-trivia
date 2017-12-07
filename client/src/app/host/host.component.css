@@ -72,6 +72,7 @@
   background-color: #1d2864;
   color: white;
 }
+.spotify-icon,
 .answer-validity-ui {
   cursor: pointer;
 }
@@ -119,6 +120,14 @@
   display: block;
   text-align: center;
   margin-top: 10px;
+  float: right;
+  margin-right: 16px;
+}
+.timer-display-wrapper label {
+  color: white;
+}
+.timer-display-wrapper input {
+  max-width: 96%;
 }
 .timer-display {
   font-size: 2rem;
@@ -152,6 +161,9 @@
   bottom: 0;
   border-left: 1px solid black;
 }
+.score-board-wrapper h4 {
+  margin: 2px;
+}
 .score-board-wrapper ul li button {
   float: right;
 }
@@ -162,4 +174,66 @@
 }
 .score-board-wrapper ul li b {
   line-height: 44px;
+}
+
+.round-and-question {
+  position: absolute;
+  top: 20px;
+  left: 20.1%;
+  font-size: 1.3rem;
+  color: white;
+  z-index: 900;
+}
+
+.spotify-icon:hover {
+  color: #00d914;
+}
+.no-spotify-latch {
+  background-color: red;
+  color: white;
+}
+.expired-spotify-auth {
+  background-color: #d9d528;
+  color: white;
+}
+.spotify-latch-active,
+.spotify-latch-active:hover {
+  background-color: #0e9d18;
+  color: white;
+}
+.getting-latch {
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+.spotify-controls {
+  position: absolute;
+  top: 20px;
+  left: 80.1%;
+  font-size: 1.3rem;
+  color: white;
+  z-index: 900;
+}
+.spotify-lock-indicator {
+  color: #3f51b5;
+  background-color: white;
+  padding: 4px;
+  width:100px;
+  text-align: center;
+  display: inline-block;
+  margin-right: 0px;
+}
+.spotify-lock-indicator .spotify-icon {
+  width: 100%;
+  display: block;
+}
+.spotify-lock-label {
+  position: absolute;
+  font-size: 0.8rem;
+  top: -16px;
+  display: block;
+  text-align: center;
+  width: 108px;
+  background-color: #2a3573;
+  color: white;
+  left: 0;
 }

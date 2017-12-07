@@ -11,6 +11,8 @@ import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/map';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
+const SPOTIFY_API_ENDPOINT = 'https://api.spotify.com/v1/';
+
 @Component({
   selector: 'tcc-host',
   templateUrl: './host.component.html',
@@ -34,9 +36,22 @@ export class HostComponent implements OnInit {
   gameQuestionsPerRound: number;
   gamePoints: Array<number>;
   leadboardDisplayed:boolean;
+
+  // subscribe for timer, time left in question, and value to store manual entry of time
   timerInterval: any;
   timeLeft: number;
+  manualTime: number;
+
+  // spotify access token and api call management
+  spotifyLatch:boolean = false;
+  gettingSpotifyLatch:boolean = false;
+  spotifyCode: string;
   spotifyToken: any;
+  spotifyApiQueue = [];
+  spotifyApiState = false;
+  spotifyPlayState = 'paused';
+  spotifyMuteState = false;
+  spotifyTrackList = [];
 
   constructor(private socketService: SocketService, private http: HttpClient) { }
 
@@ -75,7 +90,7 @@ export class HostComponent implements OnInit {
     // poll to see what teams are connected
     this.sendNotification(MessageType.WHO, this.gameId);
 
-    this.setupSpotify();
+    //this.setupSpotify();
   }
 
   // setup default values, including user
@@ -93,6 +108,7 @@ export class HostComponent implements OnInit {
     this.gameRounds = 3;
     this.gameQuestionsPerRound = 4;
     this.gamePoints = [5, 10, 20];
+    this.spotifyToken = null;
   }
 
   // initialize connection to socket server, and handle messages on the socket
@@ -102,7 +118,6 @@ export class HostComponent implements OnInit {
     this.ioConnection = this.socketService.onMessage()
       .subscribe((message: Message) => {
         this.handleMessage(message);
-        console.log(message);
         this.messages.push(message);
       });
 
@@ -138,6 +153,12 @@ export class HostComponent implements OnInit {
           this.addTeamAnswer(message);
         }
         break;
+      case MessageType.TOKEN:
+        this.spotifyCode = message.content.code;
+        localStorage.setItem('spotifyCode', this.spotifyCode);
+        this.spotifyApiQueue = [];
+        this.getSpotifyAuth();
+        break;
     }
   }
   // send message on socket server
@@ -171,8 +192,12 @@ export class HostComponent implements OnInit {
         return 'DISPLAY_SCOREBOARD';
       case MessageType.WHO:
         return 'WHO';
+      case MessageType.SYSTEM:
+        return 'SYSTEM';
+      case MessageType.TOKEN:
+        return 'TOKEN';
     }
-    return 'UNKNOWN';
+    return messageType;
   }
 
   // generate a random ID
@@ -328,15 +353,22 @@ export class HostComponent implements OnInit {
 
   // game control, start game timer observer
   private startQuestionTimer() {
-    this.startSpotifyPlayback();
+    if (this.spotifyLatch) {
+      this.startSpotifyPlayback();
+    } else {
+      if (this.manualTime < 1) {
+        return false;
+      }
+      this.timeLeft = this.manualTime;
+      this.actuallyStartTimer();
+      this.manualTime = 0;
+    }
   }
 
   private actuallyStartTimer() {
     this.activeQuestion.started = true;
     this.sendNotification(MessageType.QUESTION, this.activeQuestion);
     this.sendNotification(MessageType.TIMER_START);
-
-    //this.timeLeft = this.activeQuestion.timeAllowed;
 
     this.storeGameData();
     let interval = Observable.timer(0, 1000)
@@ -352,21 +384,47 @@ export class HostComponent implements OnInit {
       function (err) {
       }.bind(this),
       function () {
-        if (this.timeLeft === 0 && this.activeQuestion) {
-          this.activeQuestion.timerDone = true;
-          this.storeGameData();
-          this.resetTimer();
-          this.sendNotification(MessageType.QUESTION, this.activeQuestion);
+        if (this.timeLeft <= 1 && this.activeQuestion) {
+          this.timerIsDone();
         }
       }.bind(this)
     );
   }
 
+  private timerIsDone() {
+    if (this.spotifyPlayState == 'playing') {
+      this.spotifyControl('pause');
+    }
+    this.activeQuestion.timerDone = true;
+    this.storeGameData();
+    this.resetTimer();
+    this.sendNotification(MessageType.QUESTION, this.activeQuestion);
+  }
+
   // handle tick for game timer, send a TIMER_SYNC once there is less than 15 seconds
   private timerTick(t) {
     this.timeLeft = this.timeLeft - 1;
+    if (this.timeLeft <= 1 && this.spotifyPlayState == 'playing') {
+      this.spotifyControl('pause');
+    }
     if (this.timeLeft % 10 === 0 || this.timeLeft < 15) {
-      this.sendNotification(MessageType.TIMER_SYNC, this.timeLeft);
+      if (this.timeLeft > 9 && this.timeLeft % 10 === 0) {
+        this.makeSpotifyPlayerApiCall(
+          'get',
+          'currently-playing',
+          '',
+          {},
+          function (result) {
+            this.timeLeft = Math.ceil(((<any>result).item.duration_ms - (<any>result).progress_ms) / 1000);
+            this.sendNotification(MessageType.TIMER_SYNC, this.timeLeft);
+            if (this.timeLeft <= 0) {
+              this.timerIsDone();
+            }
+          }.bind(this)
+        );
+      } else {
+        this.sendNotification(MessageType.TIMER_SYNC, this.timeLeft);
+      }
     }
     this.storeGameData();
   }
@@ -411,7 +469,9 @@ export class HostComponent implements OnInit {
 
   // game control, stop the timer and show the answer
   private displayAnswer() {
-    this.nextSpotifyTrack();
+    if (this.spotifyPlayState == 'playing') {
+      this.spotifyControl('pause');
+    }
     this.activeQuestion.timerDone = true;
     this.activeQuestion.answerDisplayed = true;
     this.timeLeft = 0;
@@ -594,7 +654,7 @@ export class HostComponent implements OnInit {
                     title: '',
                     type: 'choice',
                     answer: '',
-                    timeAllowed: 15,
+                    timeAllowed: 9999,
                     choices: [],
                     categoryDisplayed: false,
                     started: false,
@@ -714,125 +774,277 @@ export class HostComponent implements OnInit {
     }
   }
 
-  private setupSpotify() {
-    let timeNow = Math.floor(Date.now() / 1000);
-
-    if (window.location.hash.length > 0) {
-      let token = window.location.hash.split('&')
-      token[0] = token[0].substr(1);
-      let finalTokenObject:any = {};
-      token.forEach(function (tokenLine){
-        finalTokenObject[tokenLine.split('=')[0]] = tokenLine.split('=')[1];
-      });
-      finalTokenObject.issuedAt = timeNow;
-      this.spotifyToken = finalTokenObject;
-      localStorage.setItem('spotifyToken', JSON.stringify(this.spotifyToken));
-    }
-
-    if (
-      this.spotifyToken == null ||
-      typeof this.spotifyToken.expires_in === 'undefined'
-    ) {
-      let fetchedSpotifyToken = localStorage.getItem('spotifyToken');
-      if (fetchedSpotifyToken && fetchedSpotifyToken.length > 0) {
-        this.spotifyToken = JSON.parse(fetchedSpotifyToken);
-      }
-    }
-    if (
-      this.spotifyToken == null ||
-      typeof this.spotifyToken.expires_in === 'undefined' ||
-      this.spotifyToken.expires_in < (timeNow - this.spotifyToken.issuedAt)
-    ) {
-      window.location.href = 'https://accounts.spotify.com/authorize?'
-        + 'client_id=62a8dc0ad3224977a880734a85a3c92a'
-        + '&redirect_uri=http%3A%2F%2F192.168.1.100%3A4200%2Fhost'
-        + '&scope=user-read-playback-state%20user-modify-playback-state%20user-read-currently-playing'
-        + '&response_type=token&state=123';
+  private getSpotifyCode() {
+    let existingCode = localStorage.getItem('spotifyCode');
+    // todo: when we try to re-use this code it NEVER works. WHY?
+    existingCode = '';
+    if (existingCode && existingCode !== 'null' && existingCode.length > 0) {
+      this.gettingSpotifyLatch = true;
+      this.spotifyCode = existingCode;
+      this.getSpotifyAuth();
       return;
     }
+    this.gettingSpotifyLatch = true;
+    this.spotifyApiQueue = [];
+    let winFeature =
+      'location=no,toolbar=no,menubar=no,scrollbars=yes,resizable=yes';
+    window.open(
+      'https://accounts.spotify.com/authorize?'
+      + 'client_id=62a8dc0ad3224977a880734a85a3c92a'
+      + '&redirect_uri=http%3A%2F%2F192.168.1.100%3A8080%2Ftoken'
+      + '&scope=user-read-playback-state%20user-modify-playback-state%20user-read-currently-playing%20user-read-playback-state'
+      + '&response_type=code&show_dialog=true', 'null', winFeature
+    );
+  }
 
-    console.log('loading spotify playlist');
-    this.loadSpotifyPlaylist();
+  private updateSpotifyAuth() {
+    if (this.gettingSpotifyLatch) {
+      return;
+    }
+    this.spotifyToken = null;
+    this.spotifyLatch = false;
+    this.spotifyApiQueue = [];
+    this.gettingSpotifyLatch = true;
+    this.getSpotifyAuth()
+  }
+
+  private getSpotifyAuth() {
+      this.http.get('http://192.168.1.100:8080/spotifyauth/' + this.spotifyCode
+      ).subscribe(result => {
+        let callResult = <any>result;
+        if (typeof callResult.error != 'undefined') {
+          this.messages.push(<Message>{
+            'from':{
+              name: 'SYSTEM'
+            },
+            type: MessageType.SYSTEM,
+            content: 'SPOTIFY LATCH ERROR - ' + callResult.error
+          });
+          this.gettingSpotifyLatch = false;
+          this.spotifyToken = null;
+          localStorage.setItem('spotifyCode', null);
+          this.spotifyCode = null;
+          this.spotifyLatch = false;
+          this.spotifyApiQueue = [];
+          return;
+        }
+        this.spotifyToken = result;
+        this.gettingSpotifyLatch = false;
+        this.spotifyLatch = true;
+        this.spotifyApiQueue = [];
+        this.loadSpotifyPlaylist();
+      }, error => {
+        this.gettingSpotifyLatch = false;
+        this.spotifyToken = null;
+        this.spotifyCode = null;
+        localStorage.setItem('spotifyCode', null);
+        this.spotifyLatch = false;
+        this.spotifyApiQueue = [];
+        this.messages.push(<Message>{
+          'from':{
+            name: 'SYSTEM'
+          },
+          type: MessageType.SYSTEM,
+          content: 'SPOTIFY LATCH ERROR'
+        });
+      });
   }
 
   private loadSpotifyPlaylist(){
-    // offset = to jump into playlist
-    //context_uri = spotify:user:1251303310:playlist:6ohekrzCRPIZdQfDcQ6TvZ
-    //https://api.spotify.com/v1/me/player/play
-
-    this.http.put('https://api.spotify.com/v1/me/player/volume?volume_percent=0',
+    this.makeSpotifyPlayerApiCall(
+      'get',
+      'users/1251303310/playlists/6ohekrzCRPIZdQfDcQ6TvZ/tracks',
+      '',
       {},
-      {headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.spotifyToken.access_token)}
-    ).subscribe(result => {
-      this.http.put('https://api.spotify.com/v1/me/player/play',
-        {context_uri: 'spotify:user:1251303310:playlist:6ohekrzCRPIZdQfDcQ6TvZ'},
-        {headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.spotifyToken.access_token)}
-      ).subscribe(result => {
-        setTimeout(function () {
-          this.nextSpotifyTrack();
-        }.bind(this), 2000)
-      });
-    });
-
+      function (result) {
+        this.spotifyTrackList = result.items;
+      }.bind(this),
+      true
+    );
   }
 
   private startSpotifyPlayback() {
-    this.http.put('https://api.spotify.com/v1/me/player/play',
-      {},
-      {headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.spotifyToken.access_token)}
-    ).subscribe(result => {
-
-      this.http.get('https://api.spotify.com/v1/me/player/currently-playing',
-        {headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.spotifyToken.access_token)}
-      ).subscribe(result => {
-        this.timeLeft = Math.ceil((<any>result).item.duration_ms / 1000);
+    this.spotifyPlayState = 'playing';
+    let questionIndex = this.game.length;
+    this.timeLeft = Math.ceil(this.spotifyTrackList[questionIndex].track.duration_ms / 1000);
+    this.makeSpotifyPlayerApiCall(
+      'put',
+      'play',
+      '',
+      {context_uri: 'spotify:user:1251303310:playlist:6ohekrzCRPIZdQfDcQ6TvZ', offset: {uri:this.spotifyTrackList[questionIndex].track.uri}},
+      function () {
         this.actuallyStartTimer();
-      });
-    });
+      }.bind(this)
+    );
   }
 
-  private nextSpotifyTrack() {
-    this.http.put('https://api.spotify.com/v1/me/player/pause',
-      {},
-      {headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.spotifyToken.access_token)}
-    ).subscribe(result => {
-      this.http.put('https://api.spotify.com/v1/me/player/volume?volume_percent=0',
-        {},
-        {headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.spotifyToken.access_token)}
-      ).subscribe(result => {
+  spotifyControl(doWhat) {
+    switch (doWhat) {
+      case 'play':
+        this.makeSpotifyPlayerApiCall(
+          'put',
+          'play',
+          '',
+          {}
+        );
+        this.spotifyPlayState = 'playing';
+        break;
+      case 'pause':
+        this.makeSpotifyPlayerApiCall(
+          'put',
+          'pause',
+          '',
+          {}
+        );
+        this.spotifyPlayState = 'paused';
+        break;
+      case 'mute':
+        this.makeSpotifyPlayerApiCall(
+          'put',
+          'volume',
+          'volume_percent=0',
+          {}
+        );
+        this.spotifyMuteState = true;
+        break;
+      case 'unmute':
+        this.makeSpotifyPlayerApiCall(
+          'put',
+          'volume',
+          'volume_percent=100',
+          {}
+        );
+        this.spotifyMuteState = false;
+        break;
+      case 'prev':
+        this.makeSpotifyPlayerApiCall(
+          'post',
+          'previous',
+          '',
+          {}
+        );
+        this.spotifyMuteState = false;
+        break;
+      case 'back':
+        this.makeSpotifyPlayerApiCall(
+          'put',
+          'seek',
+          'position_ms=0',
+          {}
+        );
+        this.spotifyMuteState = false;
+        break;
+      case 'next':
+        this.makeSpotifyPlayerApiCall(
+          'post',
+          'next',
+          '',
+          {}
+        );
+        this.spotifyMuteState = false;
+        break;
+    }
+  }
 
-        this.http.post('https://api.spotify.com/v1/me/player/next',
-          {},
-          {headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.spotifyToken.access_token)}
-        ).subscribe(result => {
+  makeSpotifyPlayerApiCall(method: string, command: string, queryString: string, body: any, callback?: any, rawUrl?: boolean) {
+    this.spotifyApiQueue.push({
+      method: method,
+      command: command,
+      queryString: queryString,
+      body: body,
+      callback: callback,
+      rawUrl: rawUrl,
+      attempts: 0
+    });
+    if (this.spotifyApiState === false) {
+      this.doSpotifyApiCall();
+    }
+  }
 
-          setTimeout(function () {
-            this.http.put('https://api.spotify.com/v1/me/player/pause',
-              {},
-              {headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.spotifyToken.access_token)}
-            ).subscribe(result => {
-
-              this.http.put('https://api.spotify.com/v1/me/player/volume?volume_percent=100',
-                {},
-                {headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.spotifyToken.access_token)}
-              ).subscribe(result => {
-
-                this.http.put('https://api.spotify.com/v1/me/player/seek?position_ms=0',
-                  {},
-                  {headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.spotifyToken.access_token)}
-                ).subscribe(result => {
-
-                });
-
-              });
-
-            });
-          }.bind(this), 4000);
-
-        });
-
+  doSpotifyApiCall() {
+    if (!this.spotifyLatch) {
+      return;
+    }
+    if (this.spotifyApiQueue.length === 0 || this.spotifyApiState === true) {
+      return;
+    }
+    if (this.spotifyApiQueue[0].attempts >= 3) {
+      this.messages.push(<Message>{
+        'from':{
+          name: 'SYSTEM'
+        },
+        type: MessageType.SYSTEM,
+        content: 'SPOTIFY ERROR -- too many tries'
       });
+      this.spotifyApiQueue.shift();
+      this.spotifyApiState = false;
+      if (this.spotifyApiQueue.length > 0) {
+        setTimeout(function () {
+          this.doSpotifyApiCall();
+        }.bind(this), 1000);
+      }
+      return;
+    }
+
+    this.spotifyApiQueue[0].attempts++;
+    this.spotifyApiState = true;
+
+    this.messages.push(<Message>{
+      'from':{
+        name: 'SYSTEM'
+      },
+      type: MessageType.SYSTEM,
+      content: 'SPOTIFY: ' + this.spotifyApiQueue[0].method + '-' + this.spotifyApiQueue[0].command
     });
 
+    let url = '';
+    if (this.spotifyApiQueue[0].rawUrl !== true) {
+      url = SPOTIFY_API_ENDPOINT + 'me/player/' +
+      this.spotifyApiQueue[0].command +
+      (this.spotifyApiQueue[0].queryString.length > 0 ?
+          '?' + this.spotifyApiQueue[0].queryString :''
+      );
+    } else {
+      url = SPOTIFY_API_ENDPOINT + this.spotifyApiQueue[0].command;
+    }
+
+    let req;
+    if (this.spotifyApiQueue[0].method === 'get') {
+      req = this.http[this.spotifyApiQueue[0].method](
+        url,
+        {headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.spotifyToken.access_token)}
+      );
+    } else {
+      req = this.http[this.spotifyApiQueue[0].method](
+        url,
+        this.spotifyApiQueue[0].body,
+        {headers: new HttpHeaders().set('Authorization', 'Bearer ' + this.spotifyToken.access_token)}
+      );
+    }
+
+    req.subscribe(result => {
+      if (typeof this.spotifyApiQueue[0].callback === 'function') {
+        this.spotifyApiQueue[0].callback(result);
+      }
+      this.spotifyApiQueue.shift();
+      this.spotifyApiState = false;
+      if (this.spotifyApiQueue.length > 0) {
+        setTimeout(function () {
+          this.doSpotifyApiCall();
+        }.bind(this), 1000);
+      }
+    }, error => {
+      this.messages.push(<Message>{
+        'from':{
+          name: 'SYSTEM'
+        },
+        type: MessageType.SYSTEM,
+        content: 'SPOTIFY ERROR'
+      });
+      this.spotifyApiState = false;
+      setTimeout(function () {
+        this.doSpotifyApiCall();
+      }.bind(this), 2000);
+    });
   }
 }

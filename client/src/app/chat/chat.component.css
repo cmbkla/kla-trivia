@@ -68,6 +68,14 @@
   padding: 12px 0;
   width: 100%;
 }
+.answer-letter-wrapper {
+  background-color: #ff4081;
+  color: white;
+  border-radius: 50px;
+  padding: 5px 10px;
+  display: inline-block;
+  font-size: 1.4rem;
+}
 
 
 .timer-display-wrapper {

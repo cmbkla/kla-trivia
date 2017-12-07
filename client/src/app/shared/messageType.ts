@@ -8,5 +8,7 @@ export enum MessageType {
     TIMER_SYNC,
     UPDATE_SCORE,
     DISPLAY_SCOREBOARD,
-    WHO
+    WHO,
+    SYSTEM,
+    TOKEN
 }

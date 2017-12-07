@@ -3,6 +3,7 @@ import * as http from "http";
 import * as socketIo from "socket.io";
 
 import { Message } from "./model";
+import { User } from './model/user.model';
 
 export class Server {
     public static readonly PORT:number = 8080;
@@ -14,6 +15,7 @@ export class Server {
     constructor() {
         this.createApp();
         this.config();
+        this.addEndpoints();
         this.createServer();
         this.sockets();
         this.listen();
@@ -29,6 +31,11 @@ export class Server {
 
     private config(): void {
         this.port = process.env.PORT || Server.PORT;
+        this.app.use(function(req, res, next) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            next();
+        });
     }
 
     private sockets(): void {
@@ -51,5 +58,33 @@ export class Server {
                 console.log('Client disconnected');
             });
         });
+    }
+
+    private addEndpoints(): void {
+        this.app.get('/spotifyauth/:code', function (req: any, res: any) {
+            let request = require("request");
+            let postData = {
+                grant_type: 'authorization_code',
+                code: req.params.code,
+                redirect_uri: 'http://192.168.1.100:8080/token',
+                client_id: '62a8dc0ad3224977a880734a85a3c92a',
+                client_secret: '4d964a1c589d417581330da90b4a36c1'
+            };
+            request.post({url:'https://accounts.spotify.com/api/token', form: postData}, function(err: any, httpResponse: any, body: any){
+                res.send(body)
+            });
+        });
+
+        this.app.get('/token', function (req: any, res: any) {
+            this.io.emit('message', <Message>{
+                from: <User>{
+                    id: 0,
+                    name: 'Server'
+                },
+                type: 11,
+                content: req.query
+            });
+            res.send('<html><head><script>(function() { setTimeout(function() { window.close(); }, 1000); })();</script></head><body><h1>CLOSING THIS WINDOW...</h1></body></html>');
+        }.bind(this));
     }
 }

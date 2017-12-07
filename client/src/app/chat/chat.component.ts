@@ -14,7 +14,7 @@ import 'rxjs/add/operator/take';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 const AVATAR_URL = 'https://api.adorable.io/avatars/285';
-// todo: need to store user id in localstorage and offer ability to resume session or start over
+// todo: need a way to invalidate stored user so they can pick a new name
 @Component({
   selector: 'tcc-chat',
   templateUrl: './chat.component.html',

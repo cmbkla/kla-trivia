@@ -72,21 +72,27 @@
 
   <div class="screen-controls">
     <div class="control-wrapper">
-      <div *ngIf="!gameIsComplete()">{{getRoundAndQuestionNumber()}} <ng-container *ngIf="isDoubler()">DOUBLE OR NOTHING</ng-container></div>
-      <div *ngIf="gameIsComplete()">Game Complete</div>
-      <p>
-        <button color="primary" mat-raised-button (click)="advanceQuestionState()" *ngIf="getQuestionState() && !gameIsComplete()">{{stateLabel}}</button>
-        <button color="primary" mat-raised-button (click)="updateScoreAndShowLeaderboard()" *ngIf="gameIsComplete()">Show Final Leaderboard</button>
-        <button color="secondary" [ngClass]="{'mat-warn': newGameConfirm}" mat-raised-button (click)="createNewGame()">New Game</button>
-      </p>
       <div class="timer-display-wrapper" *ngIf="activeQuestion && activeQuestion.started && !activeQuestion.timerDone">
         <span [ngClass]="{'time-is-short': timeIsShort()}" class="timer-display">{{formatTimer()}}</span>
       </div>
+      <div class="timer-display-wrapper" *ngIf="activeQuestion && !activeQuestion.started && !activeQuestion.timerDone && !spotifyLatch">
+        <label>Manual Timer</label>
+        <input type="number" [(ngModel)]="manualTime" value="0" />
+      </div>
+      <p>
+        <button color="primary" mat-raised-button (click)="advanceQuestionState()" *ngIf="getQuestionState() && !gameIsComplete()">{{stateLabel}}</button>
+        <button color="primary" mat-raised-button (click)="updateScoreAndShowLeaderboard()" *ngIf="gameIsComplete()">Show Final Leaderboard</button>
+      </p>
+      <p>
+        <button color="secondary" [ngClass]="{'mat-warn': newGameConfirm}" mat-raised-button (click)="createNewGame()">New Game</button>
+      </p>
     </div>
     <div class="log-wrapper">
       <h4>log</h4>
       <p *ngFor="let message of messages.slice().reverse()">
-        <b>{{message.from.name}}</b> <span>{{translateMessageTypeToText(message.type)}}</span>
+        <b>{{message.from.name}}</b>
+        <span *ngIf="translateMessageTypeToText(message.type) != 'SYSTEM'">{{translateMessageTypeToText(message.type)}}</span>
+        <span *ngIf="translateMessageTypeToText(message.type) == 'SYSTEM'">{{message.content}}</span>
       </p>
     </div>
   </div>
@@ -99,4 +105,27 @@
       <b>{{team.name}}</b> <button mat-mini-fab class="primary">{{team.score}}</button>
     </li>
   </ul>
+</div>
+
+<div class="spotify-controls">
+  <div class="spotify-lock-indicator">
+    <span class="spotify-lock-label">Player Status</span>
+    <mat-icon *ngIf="!spotifyLatch && !spotifyCode" (click)="getSpotifyCode()" class="no-spotify-latch spotify-icon" [ngClass]="{'getting-latch': gettingSpotifyLatch}">lock_open</mat-icon>
+    <mat-icon *ngIf="!spotifyLatch && spotifyCode && spotifyCode.length > 0" (click)="updateSpotifyAuth()" [ngClass]="{'getting-latch': gettingSpotifyLatch}" class="expired-spotify-auth spotify-icon">lock_outline</mat-icon>
+    <mat-icon *ngIf="spotifyLatch" (click)="updateSpotifyAuth()" class="spotify-latch-active spotify-icon">lock</mat-icon>
+  </div>
+
+
+  <mat-icon *ngIf="spotifyLatch" (click)="spotifyControl('prev')" class="spotify-icon">skip_previous</mat-icon>
+  <mat-icon *ngIf="spotifyLatch" (click)="spotifyControl('back')" class="spotify-icon">fast_rewind</mat-icon>
+  <mat-icon *ngIf="spotifyLatch && spotifyPlayState == 'paused'" (click)="spotifyControl('play')" class="spotify-icon">play_circle_filled</mat-icon>
+  <mat-icon *ngIf="spotifyLatch && spotifyPlayState == 'playing'" (click)="spotifyControl('pause')" class="spotify-icon">pause_circle_filled</mat-icon>
+  <mat-icon *ngIf="spotifyLatch && spotifyMuteState == false" (click)="spotifyControl('mute')" class="spotify-icon">volume_off</mat-icon>
+  <mat-icon *ngIf="spotifyLatch && spotifyMuteState == true" (click)="spotifyControl('unmute')" class="spotify-icon">volume_up</mat-icon>
+  <mat-icon *ngIf="spotifyLatch" (click)="spotifyControl('next')" class="spotify-icon">skip_next</mat-icon>
+</div>
+
+<div class="round-and-question">
+  <div *ngIf="!gameIsComplete()">{{getRoundAndQuestionNumber()}} <ng-container *ngIf="isDoubler()">DOUBLE OR NOTHING</ng-container></div>
+  <div *ngIf="gameIsComplete()">Game Complete</div>
 </div>
