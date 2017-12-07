@@ -791,7 +791,7 @@ export class HostComponent implements OnInit {
     window.open(
       'https://accounts.spotify.com/authorize?'
       + 'client_id=62a8dc0ad3224977a880734a85a3c92a'
-      + '&redirect_uri=http%3A%2F%2F192.168.1.100%3A8080%2Ftoken'
+      + '&redirect_uri=http%3A%2F%2F192.168.1.98%3A8080%2Ftoken'
       + '&scope=user-read-playback-state%20user-modify-playback-state%20user-read-currently-playing%20user-read-playback-state'
       + '&response_type=code&show_dialog=true', 'null', winFeature
     );
@@ -809,7 +809,7 @@ export class HostComponent implements OnInit {
   }
 
   private getSpotifyAuth() {
-      this.http.get('http://192.168.1.100:8080/spotifyauth/' + this.spotifyCode
+      this.http.get('http://192.168.1.98:8080/spotifyauth/' + this.spotifyCode
       ).subscribe(result => {
         let callResult = <any>result;
         if (typeof callResult.error != 'undefined') {
