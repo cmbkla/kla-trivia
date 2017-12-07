@@ -612,7 +612,7 @@ export class HostComponent implements OnInit {
   /* This is fugly AF but it does work, so..... */
   public importQuestions() {
     this.questionsLoading = true;
-    let validCategories = ['pictures', 'people', 'animals', 'entertainment', 'history', 'humanities', 'movies', 'music', 'science-technology', 'sports', 'video-games', 'world', 'television', 'literature', 'hobbies', 'geography', 'brain-teasers'];
+    let validCategories = ['picture-this', 'people', 'animals', 'entertainment', 'history', 'humanities', 'movies', 'music', 'science-technology', 'sports', 'video-games', 'world', 'television', 'literature', 'hobbies', 'geography', 'brain-teasers'];
     let categoryMax = 20;
     let categoryComplete = 0;
     let questionId = 0;
