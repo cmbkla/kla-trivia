@@ -352,6 +352,7 @@ export class HostComponent implements OnInit {
 
   // game control, start game timer observer
   private startQuestionTimer() {
+    this.activeQuestion.started = true;
     if (this.spotifyLatch) {
       this.startSpotifyPlayback();
     } else {
@@ -366,7 +367,6 @@ export class HostComponent implements OnInit {
   }
 
   private actuallyStartTimer() {
-    this.activeQuestion.started = true;
     this.sendNotification(MessageType.QUESTION, this.activeQuestion);
     this.sendNotification(MessageType.TIMER_START);
 
