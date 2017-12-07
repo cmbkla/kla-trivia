@@ -359,6 +359,7 @@ export class HostComponent implements OnInit {
         return false;
       }
       this.timeLeft = this.manualTime;
+      this.activeQuestion.timeAllowed = this.timeLeft;
       this.actuallyStartTimer();
       this.manualTime = 0;
     }
@@ -856,6 +857,7 @@ export class HostComponent implements OnInit {
     this.spotifyPlayState = 'playing';
     let questionIndex = this.game.length + 1;
     this.timeLeft = Math.ceil(this.spotifyTrackList[questionIndex].track.duration_ms / 1000);
+    this.activeQuestion.timeAllowed = this.timeLeft;
     this.makeSpotifyPlayerApiCall(
       'put',
       'play',
