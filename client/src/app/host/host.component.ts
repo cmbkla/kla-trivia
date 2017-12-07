@@ -104,9 +104,9 @@ export class HostComponent implements OnInit {
     this.game = [];
     this.questions = [];
     this.questionCategories = [];
-    this.gameRounds = 3;
+    this.gameRounds = 4;
     this.gameQuestionsPerRound = 4;
-    this.gamePoints = [5, 10, 20];
+    this.gamePoints = [5, 10, 20, 40];
     this.spotifyToken = null;
   }
 
