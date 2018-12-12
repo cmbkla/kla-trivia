@@ -20,7 +20,7 @@
 	"question": "Whitey Ford was a successful Major League Baseball player, who played in what position?",
 	"type": "choice",
 	"category": "MLB",
-	"song": "",
+	"song": "spotify:track:5lO1htX1UPjwyItDLurhR5",
 	"answer": "A",
 	"choices":[
 	  {"value": "Pitcher", "letter": "A"},
@@ -34,8 +34,8 @@
 	"position": 3,
 	"question": "Jennifer Lawrence, who won the Academy Award for Best Actress for her role in Silver Linings Playbook, achieved international recognition as the heroine Katniss Everdeen in this movie.",
 	"type": "choice",
-	"category": "",
-	"song": "",
+	"category": "Celebrities",
+	"song": "spotify:track:3498wF96LsgVgMkGmJzJOC",
 	"answer": "D",
 	"choices":[
 	  {"value": "Avatar", "letter": "A"},
@@ -49,8 +49,8 @@
 	"position": 4,
 	"question": "Which of these people was not one of the co-founders of the Apple Inc. corporation?",
 	"type": "choice",
-	"category": "",
-	"song": "",
+	"category": "Nerd Knowledge",
+	"song": "spotify:track:68JS5SFTnW5Yv9Vzw81Jf0",
 	"answer": "D",
 	"choices":[
 	  {"value": "Steve Wozniak", "letter": "A"},
@@ -64,13 +64,13 @@
 	"position": 1,
 	"question": "Miranda, Ariel, Umbriel, Titania, Oberon, Caliban, and Sycorax are names of the icy moons of this planet.",
 	"type": "choice",
-	"category": "",
-	"song": "",
+	"category": "The Final Frontier",
+	"song": "spotify:track:5rDkA2TFOImbiVenmnE9r4",
 	"answer": "A",
 	"choices":[
 	  {"value": "Uranus", "letter": "A"},
-	  {"value": "Jupiter", "letter": "B"},
-	  {"value": "Saturn", "letter": "C"},
+	  {"value": "Mars", "letter": "B"},
+	  {"value": "Mercury", "letter": "C"},
 	  {"value": "Venus", "letter": "D"}
 	]
   },
@@ -80,7 +80,7 @@
 	"question": "What coastal country hosts this statue?",
 	"type": "picture",
 	"category": "Not the Mafia",
-	"song": "",
+	"song": "spotify:track:3FWWh7YVaOwq1PurKgLWnh",
 	"answer": "Scotland",
 	"picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/The_Kelpies%2C_at_The_Helix%2C_Scotland.JPG/1920px-The_Kelpies%2C_at_The_Helix%2C_Scotland.JPG"
   },
@@ -105,8 +105,8 @@
 	"question": "This Commonwealth is home to the world's largest herd of wild camels.",
 	"type": "picture",
 	"image": "https://thelandy.files.wordpress.com/2014/11/dsc_5010.jpg",
-	"category": "",
-	"song": "",
+	"category": "Dromedarian",
+	"song": "spotify:track:1Jwc3ODLQxtbnS8M9TflSP",
 	"answer": "Australia"
   },
   {
@@ -114,14 +114,14 @@
 	"position": 1,
 	"question": "Which of these historic events is the least recent?",
 	"type": "choice",
-	"category": "",
-	"song": "",
-	"answer": "D",
+	"category": "History's Greatest Hits",
+	"song": "spotify:track:2aYuJH81PpGypg9AF1fav0",
+	"answer": "B",
 	"choices":[
-	  {"value": "Harvard University is founded (1636)", "letter": "A"},
-	  {"value": "Gottfried Leibniz and Isaac Newton 'invent' calculus (1686)", "letter": "B"},
-	  {"value": "Poor Richard's Almanac goes into publication (1732)", "letter": "C"},
-	  {"value": "Napoleon becomes First Consul of France (1799)", "letter": "D"}
+	  {"value": "Napoleon becomes First Consul of France", "letter": "A"},
+	  {"value": "Harvard University is founded", "letter": "B"},
+	  {"value": "Poor Richard's Almanac goes into publication", "letter": "C"},
+	  {"value": "Gottfried Leibniz and Isaac Newton 'invent' calculus", "letter": "D"}
 	]
   },
   {
@@ -129,8 +129,8 @@
 	"position": 2,
 	"question": "Which vegetables are considered taboo food in Buddhist tradition?",
 	"type": "choice",
-	"category": "",
-	"song": "",
+	"category": "Not In My Omelet",
+	"song": "spotify:track:0bYmYFbEAADKAlHdJqZ1gL",
 	"answer": "B",
 	"choices":[
 	  {"value": "All legumes", "letter": "A"},
@@ -144,8 +144,8 @@
 	"position": 3,
 	"question": "In chemistry, if you mix an acid with a base you would get these chemicals.",
 	"type": "choice",
-	"category": "",
-	"song": "",
+	"category": "Walter White 101",
+	"song": "spotify:track:0ifSeVGUr7py5GggttDhXw",
 	"answer": "A",
 	"choices":[
 	  {"value": "Water and carbon dioxide", "letter": "A"},
@@ -159,8 +159,8 @@
 	"position": 4,
 	"question": "This is the largest island on Earth and one third of it is a national park.",
 	"type": "fill",
-	"category": "",
-	"song": "",
+	"category": "Islands In The Stream",
+	"song": "spotify:track:2MLHyLy5z5l5YRp7momlgw",
 	"answer": "Greenland"
   },
   {
@@ -168,8 +168,8 @@
 	"position": 1,
 	"question": "What year was the two dollar bill last printed in the United States?",
 	"type": "choice",
-	"category": "",
-	"song": "",
+	"category": "Cash Me Ousside",
+	"song": "spotify:track:3iwsyTZzOWHZbHffBEyi1N",
 	"answer": "A",
 	"choices":[
 	  {"value": "2014", "letter": "A"},
@@ -183,8 +183,8 @@
 	"position": 2,
 	"question": "What phobia did Sigmund Freud develop in his forties?",
 	"type": "choice",
-	"category": "",
-	"song": "",
+	"category": "Phobophobia",
+	"song": "spotify:track:2L5BtrLKHmv6GN0KQ8j7p3",
 	"answer": "B",
 	"choices":[
 	  {"value": "Fear of spiders", "letter": "A"},
@@ -198,8 +198,8 @@
 	"position": 3,
 	"question": "What was the first paved road in the Michigan?",
 	"type": "choice",
-	"category": "",
-	"song": "",
+	"category": "Traffic Jam",
+	"song": "spotify:track:5y7IfSDhBHFVnlGj1UrlA1",
 	"answer": "B",
 	"choices":[
 	  {"value": "Michigan Avenue in Lansing", "letter": "A"},
@@ -213,8 +213,8 @@
 	"position": 4,
 	"question": "Founded in 1921, this company is credited with being the first 'fast food' chain?",
 	"type": "fill",
-	"category": "",
-	"song": "",
+	"category": "Junk Food",
+	"song": "spotify:track:1r1fPuhj9H4VdXr7OK6FL5",
 	"answer": "White Castle"
   }
 ]
