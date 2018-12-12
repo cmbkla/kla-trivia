@@ -81,7 +81,7 @@ export class ChatComponent implements OnInit {
         }
         if (message.type === MessageType.QUESTION) {
           if (this.question && this.question.type == 'picture') {
-            this.questionImage = this.ds.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + this.question.picture);
+            this.questionImage = this.ds.bypassSecurityTrustResourceUrl(this.question.picture);
           } else {
             this.questionImage = '';
           }
