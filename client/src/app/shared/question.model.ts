@@ -8,6 +8,7 @@ export interface Question {
   picture?: string;
   answer: string;
   timeAllowed: number;
+  song: string;
 
   categoryDisplayed: boolean,
   asked: boolean;

@@ -1,23 +1,25 @@
 <div class="game-wrapper">
-  <h4 *ngIf="questionCategories.length > 0">Questions:</h4>
+  <h4 *ngIf="rounds.length > 0">Questions:</h4>
 
-  <mat-accordion *ngIf="questionCategories.length > 0">
-    <mat-expansion-panel *ngFor="let category of questionCategories">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          {{category.name}}
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <ul>
-        <li [ngClass]="{'asked': question.asked, 'active-question': activeQuestion && question.id === activeQuestion.id}" (click)="openQuestion(question.id)" *ngFor="let question of category.questions">
-          <b>{{question.title}}</b>
-        </li>
-      </ul>
-    </mat-expansion-panel>
+  <mat-accordion *ngIf="rounds && rounds.length > 0">
+    <ng-container *ngFor="let round of rounds">
+      <mat-expansion-panel *ngIf="round">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{round.name}}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <ul>
+          <li [ngClass]="{'asked': question.asked, 'active-question': activeQuestion && question.id === activeQuestion.id}" (click)="openQuestion(question.id)" *ngFor="let question of round.questions">
+            <b>{{question.title}}</b>
+          </li>
+        </ul>
+      </mat-expansion-panel>
+    </ng-container>
   </mat-accordion>
 
-  <p *ngIf="questions.length == 0 && !questionsLoading">No questions loaded</p>
-  <button color="primary" mat-raised-button (click)="importQuestions()" *ngIf="questions.length == 0 && !questionsLoading">Import Questions</button>
+  <p *ngIf="(!rounds || rounds.length == 0) && !questionsLoading">No questions loaded</p>
+  <button color="primary" mat-raised-button (click)="importQuestions()" *ngIf="(!rounds || rounds.length == 0) && !questionsLoading">Import Questions</button>
 
   <p *ngIf="questionsLoading">loading questions</p>
   <mat-spinner *ngIf="questionsLoading"></mat-spinner>

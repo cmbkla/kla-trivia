@@ -29,6 +29,7 @@ export class HostComponent implements OnInit {
   questionsLoading: boolean;
   questions: Array<Question>;
   questionCategories: Array<any>;
+  rounds: Array<any>;
   teams: Array<User>;
   game: Array<any>;
   gameId: number;
@@ -58,11 +59,12 @@ export class HostComponent implements OnInit {
   ngOnInit(): void {
     // setup data and connect to socket server
     this.initModel();
+    this.rounds = [];
     this.initIoConnection();
     this.sendNotification(MessageType.JOINED);
 
     // check for existing game and questions
-    let storedGame = localStorage.getItem('game');
+/*    let storedGame = localStorage.getItem('game');
     if (storedGame) {
       this.game = JSON.parse(storedGame);
       this.gameId = parseInt(localStorage.getItem('gameId'));
@@ -70,7 +72,7 @@ export class HostComponent implements OnInit {
       let storedQuestions = localStorage.getItem('questions');
       if (storedQuestions) {
         this.questions = JSON.parse(storedQuestions);
-        this.buildCategories();
+        //this.buildCategories();
 
         let storedActiveQuestion = localStorage.getItem('activeQuestion');
         try {
@@ -86,7 +88,7 @@ export class HostComponent implements OnInit {
     } else {
       this.createNewGame(false);
       this.user.gameId = this.gameId;
-    }
+    }*/
 
     // poll to see what teams are connected
     this.sendNotification(MessageType.WHO, this.gameId);
@@ -105,6 +107,7 @@ export class HostComponent implements OnInit {
     this.teams = [];
     this.game = [];
     this.questions = [];
+    this.rounds = [];
     this.questionCategories = [];
     this.gameRounds = 4;
     this.gameQuestionsPerRound = 4;
@@ -221,6 +224,7 @@ export class HostComponent implements OnInit {
     this.questions = [];
     this.questionCategories = [];
     this.teams = [];
+    this.rounds = [];
     this.gameId = this.getRandomId();
     this.activeQuestion = null;
     this.timeLeft = 0;
@@ -335,7 +339,7 @@ export class HostComponent implements OnInit {
 
   // clicked on a question on the question list
   public openQuestion(questionId: number) {
-    this.activeQuestion = this.questions[questionId];
+    this.activeQuestion = this.questions.find(question => question.id === questionId);
   }
 
   // game control, checked an answer choice checkbox, revealing it to the players
@@ -369,8 +373,11 @@ export class HostComponent implements OnInit {
   }
 
   private actuallyStartTimer() {
-    this.sendNotification(MessageType.QUESTION, this.activeQuestion);
-    this.sendNotification(MessageType.TIMER_START);
+    this.activeQuestion.started = true;
+    setTimeout(()=>{
+      this.sendNotification(MessageType.QUESTION, this.activeQuestion);
+      this.sendNotification(MessageType.TIMER_START);
+    });
 
     this.storeGameData();
     let interval = Observable.timer(0, 1000)
@@ -611,158 +618,46 @@ export class HostComponent implements OnInit {
   /* This is fugly AF but it does work, so..... */
   public importQuestions() {
     this.questionsLoading = true;
-    let validCategories = ['picture-this', 'people', 'animals', 'entertainment', 'history', 'humanities', 'movies', 'music', 'science-technology', 'sports', 'video-games', 'world', 'television', 'literature', 'hobbies', 'geography', 'brain-teasers'];
-    let categoryMax = 20;
-    let categoryComplete = 0;
-    let questionId = 0;
-    let re="#";
-
     // https://api.github.com/repos/cmbkla/OpenTriviaQA/contents/categories
-    this.http.get('https://api.github.com/repos/cmbkla/OpenTriviaQA/contents/categories')
-      .subscribe(categories => {
-
-        Object.keys(categories).forEach(function (index) {
-          if (validCategories.indexOf(categories[index].name) >= 0) {
-            // kludge
-            if (categories[index].name == 'science-technology') {
-              categories[index].name = 'science & technology';
-            }
-            this.http.get(categories[index].download_url, {responseType: 'text'})
-              .subscribe((questions: any) => {
-                let categoryCount = 0;
-                questions = questions.split(re);
-
-                // shuffle potential questions
-                for (let i = questions.length - 1; i > 0; i--) {
-                  let j = Math.floor(Math.random() * (i + 1));
-                  [questions[i], questions[j]] = [questions[j], questions[i]];
-                }
-
-                questions.forEach(function (question) {
-                  categoryCount++;
-                  if (categoryCount >= categoryMax) {
-                    return true;
-                  }
-
-                  question = question.split("\n");
-                  let questionObj: Question = {
-                    id: questionId,
-                    category: categories[index].name.substr(0, 1).toUpperCase() +
-                    categories[index].name.substr(1).replace('-', ' '),
-                    title: '',
-                    type: 'choice',
-                    answer: '',
-                    timeAllowed: 9999,
-                    choices: [],
-                    categoryDisplayed: false,
-                    started: false,
-                    asked: false,
-                    answerDisplayed: false,
-                    timerDone: false,
-                    teamAnswers: [],
-                    round: 0,
-                    questionNumber: 0,
-                    isDoubler: false
-                  };
-                  let answerText = '';
-                  let questionText = '';
-                  let answerTooLong = false;
-                  Object.keys(question).forEach(function (questionLineIndex) {
-                    let questionLine = question[questionLineIndex];
-
-                    if (
-                      questionLine.substr(0, 1) == 'A' ||
-                      questionLine.substr(0, 1) == 'B' ||
-                      questionLine.substr(0, 1) == 'C' ||
-                      questionLine.substr(0, 1) == 'D' ||
-                      questionLine.substr(0, 1) == 'E' ||
-                      questionLine.substr(0, 1) == 'F'
-                    ) {
-
-                      questionObj.choices.push(<QuestionChoices>{
-                        value: questionLine.substr(2),
-                        letter: questionLine.substr(0, 1)
-                      });
-                      if (questionLine.substr(2).length > 50) {
-                        answerTooLong = true;
-                      }
-                    } else if (questionLine.substr(0, 1) == '^') {
-
-                      answerText = questionLine.substr(2);
-                    } else if (
-                      questionLine.substr(0, 1) == '%'
-                    ) {
-                      questionObj.picture = questionLine.substr(2);
-                      questionObj.type = 'picture';
-                    } else {
-                      questionText += questionLine;
-                    }
-                  });
-
-                  if (questionObj.choices.length < 3 && questionObj.type !== 'picture') {
-                    questionObj.type = 'fill';
-                  }
-
-                  if (questionText.length > 200 || answerTooLong) {
-                    return true;
-                  }
-
-                  // fill this in for questions without choices
-                  if (questionObj.type === 'picture' || questionObj.type === 'fill') {
-                    questionObj.choices = [];
-                  }
-
-                  questionObj.title = questionText.replace('Q ', '');
-
-                  if (questionObj.type != 'picture' && questionObj.type != 'fill') {
-                    let answerChoice = questionObj.choices.find(choice => choice.value === answerText)
-                    if (!answerChoice) {
-                      return true;
-                    }
-                    questionObj.answer = answerChoice.letter;
-                  } else {
-                    questionObj.answer = answerText;
-                  }
-                  this.questions.push(questionObj);
-                  questionId++;
-                }.bind(this));
-
-                categoryComplete++;
-                if (categoryComplete == validCategories.length) {
-                  this.buildCategories();
-                  this.storeGameData();
-                }
-              });
-          } else {
-            console.log('Invalid category return', categories[index]);
+    this.http.get('https://raw.githubusercontent.com/cmbkla/kla-trivia/versions/1.2/games/2018-tpl.json?t=' + (new Date().getTime()))
+      .subscribe((game: any[]) => {
+        game.forEach((questionData) => {
+          if (!this.rounds[questionData['round']]) {
+            this.rounds[questionData['round']] = {
+              name: 'Round ' + questionData['round'],
+              questions: [],
+            };
           }
-
-        }.bind(this));
+          const questionObj = <Question>{
+            id: this.getRandomId(),
+            category: questionData['category'],
+            song: questionData['song'],
+            title: questionData['question'],
+            type: questionData['type'],
+            answer: questionData['answer'],
+            timeAllowed: 9999,
+            choices: questionData['choices'],
+            categoryDisplayed: false,
+            picture: questionData['picture'],
+            started: false,
+            asked: false,
+            answerDisplayed: false,
+            timerDone: false,
+            teamAnswers: [],
+            round: questionData['round'],
+            questionNumber: questionData['position'],
+            isDoubler: questionData['position'] === 4
+          };
+          this.rounds[questionData['round']].questions.push(questionObj);
+          this.questions.push(questionObj);
+        });
+        this.questionsLoading = false;
+        this.storeGameData();
       });
   }
 
-  private buildCategories() {
-    this.questions.forEach(function (question) {
-      let category = this.questionCategories.find(category => category.name === question.category);
-      if (!category) {
-        this.questionCategories.push({
-          name: question.category,
-          questions: []
-        });
-        category = this.questionCategories.find(category => category.name === question.category);
-      }
-      category.questions.push(question);
-    }.bind(this));
-/*    this.questionCategories.sort((left, right) => {
-      if(left.name < right.name) { return -1; }
-      if(left.name > right.name) { return 1; }
-      return 0;
-    });*/
-    this.questionsLoading = false;
-  }
-
   private storeGameData() {
-    localStorage.setItem('questions', JSON.stringify(this.questions));
+    localStorage.setItem('rounds', JSON.stringify(this.rounds));
     localStorage.setItem('game', JSON.stringify(this.game));
     if (this.activeQuestion !== null) {
       localStorage.setItem('activeQuestion', JSON.stringify(this.activeQuestion));
@@ -873,7 +768,7 @@ export class HostComponent implements OnInit {
       'put',
       'play',
       '',
-      {context_uri: 'spotify:user:1251303310:playlist:6ohekrzCRPIZdQfDcQ6TvZ', offset: {uri:this.spotifyTrackList[questionIndex].track.uri}},
+      {uris: [this.activeQuestion.song, 'spotify:track:3KDr7MBkBLMvnEa9emmYCZ']},
       function () {
         this.actuallyStartTimer();
       }.bind(this)
