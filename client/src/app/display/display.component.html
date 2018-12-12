@@ -39,6 +39,7 @@
     </div>
     <div *ngIf="question.type != 'picture'">
       <h2 class="question-title">{{question.title}}</h2>
+      <h2 *ngIf="question.type == 'fill'">{{getAnswerText()}}</h2>
       <ul>
         <li [ngClass]="{'correct-answer': choice.letter == question.answer, 'incorrect-answer': choice.letter != question.answer}" *ngFor="let choice of question.choices">
           <span class="choice-letter">{{choice.letter}}</span> {{choice.value}}

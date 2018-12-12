@@ -19,7 +19,7 @@
         </div>
       </mat-radio-group>
     </div>
-    <div *ngIf="question.type == 'picture'">
+    <div *ngIf="question.type == 'picture' || question.type == 'fill'">
       <img class="question-image" [src]="this.questionImage" />
 
       <mat-input-container class="answer-input">

@@ -73,13 +73,15 @@ export class HostComponent implements OnInit {
         this.buildCategories();
 
         let storedActiveQuestion = localStorage.getItem('activeQuestion');
-        if (storedActiveQuestion && JSON.parse(storedActiveQuestion) != null) {
-          this.activeQuestion = JSON.parse(storedActiveQuestion);
-          if (this.activeQuestion != null && this.activeQuestion.started) {
-            this.timeLeft = parseInt(localStorage.getItem('timerLeft'));
-            this.startQuestionTimer();
+        try {
+          if (storedActiveQuestion && JSON.parse(storedActiveQuestion) != null) {
+            this.activeQuestion = JSON.parse(storedActiveQuestion);
+            if (this.activeQuestion != null && this.activeQuestion.started) {
+              this.timeLeft = parseInt(localStorage.getItem('timerLeft'));
+              this.startQuestionTimer();
+            }
           }
-        }
+        } catch (e) {}
       }
     } else {
       this.createNewGame(false);
@@ -626,7 +628,7 @@ export class HostComponent implements OnInit {
               categories[index].name = 'science & technology';
             }
             this.http.get(categories[index].download_url, {responseType: 'text'})
-              .subscribe(questions => {
+              .subscribe((questions: any) => {
                 let categoryCount = 0;
                 questions = questions.split(re);
 
@@ -698,19 +700,21 @@ export class HostComponent implements OnInit {
                   });
 
                   if (questionObj.choices.length < 3 && questionObj.type !== 'picture') {
-                    return true;
+                    questionObj.type = 'fill';
                   }
+
                   if (questionText.length > 200 || answerTooLong) {
                     return true;
                   }
 
-                  if (questionObj.type === 'picture') {
+                  // fill this in for questions without choices
+                  if (questionObj.type === 'picture' || questionObj.type === 'fill') {
                     questionObj.choices = [];
                   }
 
                   questionObj.title = questionText.replace('Q ', '');
 
-                  if (questionObj.type != 'picture') {
+                  if (questionObj.type != 'picture' && questionObj.type != 'fill') {
                     let answerChoice = questionObj.choices.find(choice => choice.value === answerText)
                     if (!answerChoice) {
                       return true;
@@ -729,6 +733,8 @@ export class HostComponent implements OnInit {
                   this.storeGameData();
                 }
               });
+          } else {
+            console.log('Invalid category return', categories[index]);
           }
 
         }.bind(this));
@@ -747,6 +753,11 @@ export class HostComponent implements OnInit {
       }
       category.questions.push(question);
     }.bind(this));
+/*    this.questionCategories.sort((left, right) => {
+      if(left.name < right.name) { return -1; }
+      if(left.name > right.name) { return 1; }
+      return 0;
+    });*/
     this.questionsLoading = false;
   }
 
@@ -781,7 +792,7 @@ export class HostComponent implements OnInit {
     window.open(
       'https://accounts.spotify.com/authorize?'
       + 'client_id=62a8dc0ad3224977a880734a85a3c92a'
-      + '&redirect_uri=http%3A%2F%2F192.168.1.98%3A8080%2Ftoken'
+      + '&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Ftoken'
       + '&scope=user-read-playback-state%20user-modify-playback-state%20user-read-currently-playing%20user-read-playback-state'
       + '&response_type=code&show_dialog=true', 'null', winFeature
     );
@@ -799,7 +810,7 @@ export class HostComponent implements OnInit {
   }
 
   private getSpotifyAuth() {
-      this.http.get('http://192.168.1.98:8080/spotifyauth/' + this.spotifyCode
+      this.http.get('http://localhost:8080/spotifyauth/' + this.spotifyCode
       ).subscribe(result => {
         let callResult = <any>result;
         if (typeof callResult.error != 'undefined') {

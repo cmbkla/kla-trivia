@@ -1,0 +1,220 @@
+[
+  {
+	"round": 1,
+	"position": 1,
+	"question": "Which of these is not a type of beetle?",
+	"type": "choice",
+	"category": "Beatlemania",
+	"song": "spotify:track:1pJKAxSNxqM8R653BL8oiH",
+	"answer": "D",
+	"choices":{
+	  "A": "Long-horn beetle",
+	  "B": "Stag beetle",
+	  "C": "Flea beetle",
+	  "D": "Burrowing beetle"
+	}
+  },
+  {
+	"round": 1,
+	"position": 2,
+	"question": "Whitey Ford was a successful Major League Baseball player, who played in what position?",
+	"type": "choice",
+	"category": "MLB",
+	"song": "",
+	"answer": "A",
+	"choices":{
+	  "A": "Pitcher",
+	  "B": "First Base",
+	  "C": "Catcher",
+	  "D": "Shortstop"
+	}
+  },
+  {
+	"round": 1,
+	"position": 3,
+	"question": "Jennifer Lawrence, who won the Academy Award for Best Actress for her role in Silver Linings Playbook, achieved international recognition as the heroine Katniss Everdeen in this movie.",
+	"type": "choice",
+	"category": "",
+	"song": "",
+	"answer": "D",
+	"choices":{
+	  "A": "Avatar",
+	  "B": "Twilight",
+	  "C": "Black Swan",
+	  "D": "The Hunger Games"
+	}
+  },
+  {
+	"round": 1,
+	"position": 4,
+	"question": "Which of these people was not one of the co-founders of the Apple Inc. corporation?",
+	"type": "choice",
+	"category": "",
+	"song": "",
+	"answer": "D",
+	"choices":{
+	  "A": "Steve Wozniak",
+	  "B": "Steve Jobs",
+	  "C": "Ronald Wayne",
+	  "D": "Paul Allen"
+	}
+  },
+  {
+	"round": 2,
+	"position": 1,
+	"question": "Miranda, Ariel, Umbriel, Titania, Oberon, Caliban, and Sycorax are names of the icy moons of this planet.",
+	"type": "choice",
+	"category": "",
+	"song": "",
+	"answer": "A",
+	"choices":{
+	  "A": "Uranus",
+	  "B": "Jupiter",
+	  "C": "Saturn",
+	  "D": "Venus"
+	}
+  },
+  {
+	"round": 2,
+	"position": 2,
+	"question": "What coastal country hosts this statue?",
+	"type": "picture",
+	"category": "Not the Mafia",
+	"song": "",
+	"answer": "Scotland",
+	"picture": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/The_Kelpies%2C_at_The_Helix%2C_Scotland.JPG/1920px-The_Kelpies%2C_at_The_Helix%2C_Scotland.JPG"
+  },
+  {
+	"round": 2,
+	"position": 3,
+	"question": "This rap artist, born Stanley Kirk Burrell was known for his lavish tours and catchy hooks.  However, his attempted restyling as a gangsta-rapper was a failure.",
+	"type": "choice",
+	"category": "Hip to the Hop",
+	"song": "spotify:track:4AUS8KNz7zX8XFu9L38GT0",
+	"answer": "A",
+	"choices":{
+	  "A": "MC Hammer",
+	  "B": "Marky Mark",
+	  "C": "Busta Rhymes",
+	  "D": "Vanilla Ice"
+	}
+  },
+  {
+	"round": 2,
+	"position": 4,
+	"question": "This Commonwealth is home to the world's largest herd of wild camels.",
+	"type": "picture",
+	"image": "https://thelandy.files.wordpress.com/2014/11/dsc_5010.jpg",
+	"category": "",
+	"song": "",
+	"answer": "Australia"
+  },
+  {
+	"round": 3,
+	"position": 1,
+	"question": "Which of these historic events is the least recent?",
+	"type": "choice",
+	"category": "",
+	"song": "",
+	"answer": "D",
+	"choices":{
+	  "A": "Harvard University is founded (1636)",
+	  "B": "Gottfried Leibniz and Isaac Newton 'invent' calculus (1686)",
+	  "C": "Poor Richard's Almanac goes into publication (1732)",
+	  "D": "Napoleon becomes First Consul of France (1799)"
+	}
+  },
+  {
+	"round": 3,
+	"position": 2,
+	"question": "Which vegetables are considered taboo food in Buddhist tradition?",
+	"type": "choice",
+	"category": "",
+	"song": "",
+	"answer": "B",
+	"choices":{
+	  "A": "All legumes",
+	  "B": "Garlic and onion",
+	  "C": "Eggplants and tomatoes",
+	  "D": "Fruitcake"
+	}
+  },
+  {
+	"round": 3,
+	"position": 3,
+	"question": "In chemistry, if you mix an acid with a base you would get these chemicals.",
+	"type": "choice",
+	"category": "",
+	"song": "",
+	"answer": "A",
+	"choices":{
+	  "A": "Water and carbon dioxide",
+	  "B": "Carbon dioxide and water",
+	  "C": "Water and a salt",
+	  "D": "A salt and oxygen"
+	}
+  },
+  {
+	"round": 3,
+	"position": 4,
+	"question": "This is the largest island on Earth and one third of it is a national park.",
+	"type": "fill",
+	"category": "",
+	"song": "",
+	"answer": "Greenland"
+  },
+  {
+	"round": 4,
+	"position": 1,
+	"question": "What year was the two dollar bill last printed in the United States?",
+	"type": "choice",
+	"category": "",
+	"song": "",
+	"answer": "A",
+	"choices":{
+	  "A": "2014",
+	  "B": "2016",
+	  "C": "2018 - Still in print",
+	  "D": "1997"
+	}
+  },
+  {
+	"round": 4,
+	"position": 2,
+	"question": "What phobia did Sigmund Freud develop in his forties?",
+	"type": "choice",
+	"category": "",
+	"song": "",
+	"answer": "B",
+	"choices":{
+	  "A": "Fear of spiders",
+	  "B": "Fear of death",
+	  "C": "Fear of nightmares",
+	  "D": "Fear of heights"
+	}
+  },
+  {
+	"round": 4,
+	"position": 3,
+	"question": "What was the first paved road in the Michigan?",
+	"type": "choice",
+	"category": "",
+	"song": "",
+	"answer": "B",
+	"choices":{
+	  "A": "Michigan Avenue in Lansing",
+	  "B": "Woodward Avenue in Detroit",
+	  "C": "Bagley Avenue in Greenfield Village",
+	  "D": "Paul B. Henry Freeway in Grand Rapids"
+	}
+  },
+  {
+	"round": 4,
+	"position": 4,
+	"question": "Founded in 1921, this company is credited with being the first 'fast food' chain?",
+	"type": "fill",
+	"category": "",
+	"song": "",
+	"answer": "White Castle"
+  }
+]
