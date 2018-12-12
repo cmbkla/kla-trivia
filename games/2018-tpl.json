@@ -7,12 +7,12 @@
 	"category": "Beatlemania",
 	"song": "spotify:track:1pJKAxSNxqM8R653BL8oiH",
 	"answer": "D",
-	"choices":{
-	  "A": "Long-horn beetle",
-	  "B": "Stag beetle",
-	  "C": "Flea beetle",
-	  "D": "Burrowing beetle"
-	}
+	"choices":[
+	  {"value": "Long-horn beetle"},
+	  {"value": "Stag beetle"},
+	  {"value": "Flea beetle"},
+	  {"value": "Burrowing beetle"}
+	]
   },
   {
 	"round": 1,
@@ -22,12 +22,12 @@
 	"category": "MLB",
 	"song": "",
 	"answer": "A",
-	"choices":{
-	  "A": "Pitcher",
-	  "B": "First Base",
-	  "C": "Catcher",
-	  "D": "Shortstop"
-	}
+	"choices":[
+	  {"value": "Pitcher"},
+	  {"value": "First Base"},
+	  {"value": "Catcher"},
+	  {"value": "Shortstop"}
+	]
   },
   {
 	"round": 1,
@@ -37,12 +37,12 @@
 	"category": "",
 	"song": "",
 	"answer": "D",
-	"choices":{
-	  "A": "Avatar",
-	  "B": "Twilight",
-	  "C": "Black Swan",
-	  "D": "The Hunger Games"
-	}
+	"choices":[
+	  {"value": "Avatar"},
+	  {"value": "Twilight"},
+	  {"value": "Black Swan"},
+	  {"value": "The Hunger Games"}
+	]
   },
   {
 	"round": 1,
@@ -52,12 +52,12 @@
 	"category": "",
 	"song": "",
 	"answer": "D",
-	"choices":{
-	  "A": "Steve Wozniak",
-	  "B": "Steve Jobs",
-	  "C": "Ronald Wayne",
-	  "D": "Paul Allen"
-	}
+	"choices":[
+	  {"value": "Steve Wozniak"},
+	  {"value": "Steve Jobs"},
+	  {"value": "Ronald Wayne"},
+	  {"value": "Paul Allen"}
+	]
   },
   {
 	"round": 2,
@@ -67,12 +67,12 @@
 	"category": "",
 	"song": "",
 	"answer": "A",
-	"choices":{
-	  "A": "Uranus",
-	  "B": "Jupiter",
-	  "C": "Saturn",
-	  "D": "Venus"
-	}
+	"choices":[
+	  {"value": "Uranus"},
+	  {"value": "Jupiter"},
+	  {"value": "Saturn"},
+	  {"value": "Venus"}
+	]
   },
   {
 	"round": 2,
@@ -92,12 +92,12 @@
 	"category": "Hip to the Hop",
 	"song": "spotify:track:4AUS8KNz7zX8XFu9L38GT0",
 	"answer": "A",
-	"choices":{
-	  "A": "MC Hammer",
-	  "B": "Marky Mark",
-	  "C": "Busta Rhymes",
-	  "D": "Vanilla Ice"
-	}
+	"choices":[
+	  {"value": "MC Hammer"},
+	  {"value": "Marky Mark"},
+	  {"value": "Busta Rhymes"},
+	  {"value": "Vanilla Ice"}
+	]
   },
   {
 	"round": 2,
@@ -117,12 +117,12 @@
 	"category": "",
 	"song": "",
 	"answer": "D",
-	"choices":{
-	  "A": "Harvard University is founded (1636)",
-	  "B": "Gottfried Leibniz and Isaac Newton 'invent' calculus (1686)",
-	  "C": "Poor Richard's Almanac goes into publication (1732)",
-	  "D": "Napoleon becomes First Consul of France (1799)"
-	}
+	"choices":[
+	  {"value": "Harvard University is founded (1636)"},
+	  {"value": "Gottfried Leibniz and Isaac Newton 'invent' calculus (1686)"},
+	  {"value": "Poor Richard's Almanac goes into publication (1732)"},
+	  {"value": "Napoleon becomes First Consul of France (1799)"}
+	]
   },
   {
 	"round": 3,
@@ -132,12 +132,12 @@
 	"category": "",
 	"song": "",
 	"answer": "B",
-	"choices":{
-	  "A": "All legumes",
-	  "B": "Garlic and onion",
-	  "C": "Eggplants and tomatoes",
-	  "D": "Fruitcake"
-	}
+	"choices":[
+	  {"value": "All legumes"},
+	  {"value": "Garlic and onion"},
+	  {"value": "Eggplants and tomatoes"},
+	  {"value": "Fruitcake"}
+	]
   },
   {
 	"round": 3,
@@ -147,12 +147,12 @@
 	"category": "",
 	"song": "",
 	"answer": "A",
-	"choices":{
-	  "A": "Water and carbon dioxide",
-	  "B": "Carbon dioxide and water",
-	  "C": "Water and a salt",
-	  "D": "A salt and oxygen"
-	}
+	"choices":[
+	  {"value": "Water and carbon dioxide"},
+	  {"value": "Carbon dioxide and water"},
+	  {"value": "Water and a salt"},
+	  {"value": "A salt and oxygen"}
+	]
   },
   {
 	"round": 3,
@@ -171,12 +171,12 @@
 	"category": "",
 	"song": "",
 	"answer": "A",
-	"choices":{
-	  "A": "2014",
-	  "B": "2016",
-	  "C": "2018 - Still in print",
-	  "D": "1997"
-	}
+	"choices":[
+	  {"value": "2014"},
+	  {"value": "2016"},
+	  {"value": "2018 - Still in print"},
+	  {"value": "1997"}
+	]
   },
   {
 	"round": 4,
@@ -186,12 +186,12 @@
 	"category": "",
 	"song": "",
 	"answer": "B",
-	"choices":{
-	  "A": "Fear of spiders",
-	  "B": "Fear of death",
-	  "C": "Fear of nightmares",
-	  "D": "Fear of heights"
-	}
+	"choices":[
+	  {"value": "Fear of spiders"},
+	  {"value": "Fear of death"},
+	  {"value": "Fear of nightmares"},
+	  {"value": "Fear of heights"}
+	]
   },
   {
 	"round": 4,
@@ -201,12 +201,12 @@
 	"category": "",
 	"song": "",
 	"answer": "B",
-	"choices":{
-	  "A": "Michigan Avenue in Lansing",
-	  "B": "Woodward Avenue in Detroit",
-	  "C": "Bagley Avenue in Greenfield Village",
-	  "D": "Paul B. Henry Freeway in Grand Rapids"
-	}
+	"choices":[
+	  {"value": "Michigan Avenue in Lansing"},
+	  {"value": "Woodward Avenue in Detroit"},
+	  {"value": "Bagley Avenue in Greenfield Village"},
+	  {"value": "Paul B. Henry Freeway in Grand Rapids"}
+	]
   },
   {
 	"round": 4,
