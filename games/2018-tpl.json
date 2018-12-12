@@ -8,10 +8,10 @@
 	"song": "spotify:track:1pJKAxSNxqM8R653BL8oiH",
 	"answer": "D",
 	"choices":[
-	  {"value": "Long-horn beetle"},
-	  {"value": "Stag beetle"},
-	  {"value": "Flea beetle"},
-	  {"value": "Burrowing beetle"}
+	  {"value": "Long-horn beetle", "letter": "A"},
+	  {"value": "Stag beetle", "letter": "B"},
+	  {"value": "Flea beetle", "letter": "C"},
+	  {"value": "Burrowing beetle", "letter": "D"}
 	]
   },
   {
@@ -23,10 +23,10 @@
 	"song": "",
 	"answer": "A",
 	"choices":[
-	  {"value": "Pitcher"},
-	  {"value": "First Base"},
-	  {"value": "Catcher"},
-	  {"value": "Shortstop"}
+	  {"value": "Pitcher", "letter": "A"},
+	  {"value": "First Base", "letter": "B"},
+	  {"value": "Catcher", "letter": "C"},
+	  {"value": "Shortstop", "letter": "D"}
 	]
   },
   {
@@ -38,10 +38,10 @@
 	"song": "",
 	"answer": "D",
 	"choices":[
-	  {"value": "Avatar"},
-	  {"value": "Twilight"},
-	  {"value": "Black Swan"},
-	  {"value": "The Hunger Games"}
+	  {"value": "Avatar", "letter": "A"},
+	  {"value": "Twilight", "letter": "B"},
+	  {"value": "Black Swan", "letter": "C"},
+	  {"value": "The Hunger Games", "letter": "D"}
 	]
   },
   {
@@ -53,10 +53,10 @@
 	"song": "",
 	"answer": "D",
 	"choices":[
-	  {"value": "Steve Wozniak"},
-	  {"value": "Steve Jobs"},
-	  {"value": "Ronald Wayne"},
-	  {"value": "Paul Allen"}
+	  {"value": "Steve Wozniak", "letter": "A"},
+	  {"value": "Steve Jobs", "letter": "B"},
+	  {"value": "Ronald Wayne", "letter": "C"},
+	  {"value": "Paul Allen", "letter": "D"}
 	]
   },
   {
@@ -68,10 +68,10 @@
 	"song": "",
 	"answer": "A",
 	"choices":[
-	  {"value": "Uranus"},
-	  {"value": "Jupiter"},
-	  {"value": "Saturn"},
-	  {"value": "Venus"}
+	  {"value": "Uranus", "letter": "A"},
+	  {"value": "Jupiter", "letter": "B"},
+	  {"value": "Saturn", "letter": "C"},
+	  {"value": "Venus", "letter": "D"}
 	]
   },
   {
@@ -93,10 +93,10 @@
 	"song": "spotify:track:4AUS8KNz7zX8XFu9L38GT0",
 	"answer": "A",
 	"choices":[
-	  {"value": "MC Hammer"},
-	  {"value": "Marky Mark"},
-	  {"value": "Busta Rhymes"},
-	  {"value": "Vanilla Ice"}
+	  {"value": "MC Hammer", "letter": "A"},
+	  {"value": "Marky Mark", "letter": "B"},
+	  {"value": "Busta Rhymes", "letter": "C"},
+	  {"value": "Vanilla Ice", "letter": "D"}
 	]
   },
   {
@@ -118,10 +118,10 @@
 	"song": "",
 	"answer": "D",
 	"choices":[
-	  {"value": "Harvard University is founded (1636)"},
-	  {"value": "Gottfried Leibniz and Isaac Newton 'invent' calculus (1686)"},
-	  {"value": "Poor Richard's Almanac goes into publication (1732)"},
-	  {"value": "Napoleon becomes First Consul of France (1799)"}
+	  {"value": "Harvard University is founded (1636)", "letter": "A"},
+	  {"value": "Gottfried Leibniz and Isaac Newton 'invent' calculus (1686)", "letter": "B"},
+	  {"value": "Poor Richard's Almanac goes into publication (1732)", "letter": "C"},
+	  {"value": "Napoleon becomes First Consul of France (1799)", "letter": "D"}
 	]
   },
   {
@@ -133,10 +133,10 @@
 	"song": "",
 	"answer": "B",
 	"choices":[
-	  {"value": "All legumes"},
-	  {"value": "Garlic and onion"},
-	  {"value": "Eggplants and tomatoes"},
-	  {"value": "Fruitcake"}
+	  {"value": "All legumes", "letter": "A"},
+	  {"value": "Garlic and onion", "letter": "B"},
+	  {"value": "Eggplants and tomatoes", "letter": "C"},
+	  {"value": "Fruitcake", "letter": "D"}
 	]
   },
   {
@@ -148,10 +148,10 @@
 	"song": "",
 	"answer": "A",
 	"choices":[
-	  {"value": "Water and carbon dioxide"},
-	  {"value": "Carbon dioxide and water"},
-	  {"value": "Water and a salt"},
-	  {"value": "A salt and oxygen"}
+	  {"value": "Water and carbon dioxide", "letter": "A"},
+	  {"value": "Carbon dioxide and water", "letter": "B"},
+	  {"value": "Water and a salt", "letter": "C"},
+	  {"value": "A salt and oxygen", "letter": "D"}
 	]
   },
   {
@@ -172,10 +172,10 @@
 	"song": "",
 	"answer": "A",
 	"choices":[
-	  {"value": "2014"},
-	  {"value": "2016"},
-	  {"value": "2018 - Still in print"},
-	  {"value": "1997"}
+	  {"value": "2014", "letter": "A"},
+	  {"value": "2016", "letter": "B"},
+	  {"value": "2018 - Still in print", "letter": "C"},
+	  {"value": "1997", "letter": "D"}
 	]
   },
   {
@@ -187,10 +187,10 @@
 	"song": "",
 	"answer": "B",
 	"choices":[
-	  {"value": "Fear of spiders"},
-	  {"value": "Fear of death"},
-	  {"value": "Fear of nightmares"},
-	  {"value": "Fear of heights"}
+	  {"value": "Fear of spiders", "letter": "A"},
+	  {"value": "Fear of death", "letter": "B"},
+	  {"value": "Fear of nightmares", "letter": "C"},
+	  {"value": "Fear of heights", "letter": "D"}
 	]
   },
   {
@@ -202,10 +202,10 @@
 	"song": "",
 	"answer": "B",
 	"choices":[
-	  {"value": "Michigan Avenue in Lansing"},
-	  {"value": "Woodward Avenue in Detroit"},
-	  {"value": "Bagley Avenue in Greenfield Village"},
-	  {"value": "Paul B. Henry Freeway in Grand Rapids"}
+	  {"value": "Michigan Avenue in Lansing", "letter": "A"},
+	  {"value": "Woodward Avenue in Detroit", "letter": "B"},
+	  {"value": "Bagley Avenue in Greenfield Village", "letter": "C"},
+	  {"value": "Paul B. Henry Freeway in Grand Rapids", "letter": "D"}
 	]
   },
   {
