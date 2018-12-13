@@ -19,7 +19,7 @@
 	"position": 2,
 	"question": "How many Ian S. emojis are still active?",
 	"type": "choice",
-	"category": "",
+	"category": "Ian",
 	"song": "spotify:track:5lO1htX1UPjwyItDLurhR5",
 	"answer": "D",
 	"choices":[
