@@ -25,7 +25,7 @@ The server will be running on port `8080`
 ```bash
 $ cd client
 $ npm install
-$ ng serve
+$ ng serve -host 0.0.0.0
 ```
 
 The client will be running on port `4200`

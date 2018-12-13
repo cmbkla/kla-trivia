@@ -618,8 +618,8 @@ export class HostComponent implements OnInit {
   /* This is fugly AF but it does work, so..... */
   public importQuestions() {
     this.questionsLoading = true;
-    // https://api.github.com/repos/cmbkla/OpenTriviaQA/contents/categories
-    this.http.get('https://raw.githubusercontent.com/cmbkla/kla-trivia/versions/1.2/games/2018-tpl.json?t=' + (new Date().getTime()))
+    //https://raw.githubusercontent.com/cmbkla/kla-trivia/versions/1.2/games/2018-tpl.json
+    this.http.get('https://raw.githubusercontent.com/cmbkla/kla-trivia/versions/1.2/games/practice.json?t=' + (new Date().getTime()))
       .subscribe((game: any[]) => {
         game.forEach((questionData) => {
           if (!this.rounds[questionData['round']]) {
@@ -687,7 +687,7 @@ export class HostComponent implements OnInit {
     window.open(
       'https://accounts.spotify.com/authorize?'
       + 'client_id=62a8dc0ad3224977a880734a85a3c92a'
-      + '&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Ftoken'
+      + '&redirect_uri=http%3A%2F%2F192.168.1.2%3A8080%2Ftoken'
       + '&scope=user-read-playback-state%20user-modify-playback-state%20user-read-currently-playing%20user-read-playback-state'
       + '&response_type=code&show_dialog=true', 'null', winFeature
     );
@@ -705,7 +705,7 @@ export class HostComponent implements OnInit {
   }
 
   private getSpotifyAuth() {
-      this.http.get('http://localhost:8080/spotifyauth/' + this.spotifyCode
+      this.http.get('http://192.168.1.2:8080/spotifyauth/' + this.spotifyCode
       ).subscribe(result => {
         let callResult = <any>result;
         if (typeof callResult.error != 'undefined') {

@@ -6,11 +6,10 @@ import { Message } from "./model";
 import { User } from './model/user.model';
 
 export class Server {
-    public static readonly PORT:number = 8080;
+    public port:number = 8080;
     public app: any;
     private server: any;
     private io: any;
-    private port: string | number;
 
     constructor() {
         this.createApp();
@@ -30,7 +29,7 @@ export class Server {
     }
 
     private config(): void {
-        this.port = process.env.PORT || Server.PORT;
+        this.port = parseInt(process.env.PORT) || 8080;
         this.app.use(function(req, res, next) {
             res.header("Access-Control-Allow-Origin", "*");
             res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -43,12 +42,13 @@ export class Server {
     }
 
     private listen(): void {
+        let listenPort = this.port;
         this.server.listen(this.port, "0.0.0.0", function() {
-            console.log('Running server on port %s', this.port);
+            console.log('Running server on port %s', listenPort);
         });
 
         this.io.on('connect', (socket: any) => {
-            console.log('Connected client on port %s.', this.port);
+            console.log('Connected client on port %s.', listenPort);
             socket.on('message', (m: Message) => {
                 console.log('[server](message): %s', JSON.stringify(m));
                 this.io.emit('message', m);
@@ -66,7 +66,7 @@ export class Server {
             let postData = {
                 grant_type: 'authorization_code',
                 code: req.params.code,
-                redirect_uri: 'http://localhost:8080/token',
+                redirect_uri: 'http://192.168.1.2:8080/token',
                 client_id: '62a8dc0ad3224977a880734a85a3c92a',
                 client_secret: '4d964a1c589d417581330da90b4a36c1'
             };
@@ -75,7 +75,7 @@ export class Server {
             });
         });
 
-        this.app.get('/token', function (req: any, res: any) {
+        this.app.get('/token', (req: any, res: any) => {
             this.io.emit('message', <Message>{
                 from: <User>{
                     id: 0,
@@ -85,6 +85,6 @@ export class Server {
                 content: req.query
             });
             res.send('<html><head><script>(function() { setTimeout(function() { window.close(); }, 1000); })();</script></head><body><h1>CLOSING THIS WINDOW...</h1></body></html>');
-        }.bind(this));
+        });
     }
 }

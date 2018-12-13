@@ -1,0 +1,32 @@
+[
+  {
+	"round": 1,
+	"position": 1,
+	"question": "Why is JoJo angry?",
+	"type": "choice",
+	"category": "TPL",
+	"song": "spotify:track:1pJKAxSNxqM8R653BL8oiH",
+	"answer": "D",
+	"choices":[
+	  {"value": "Jason spoke.", "letter": "A"},
+	  {"value": "People had fun", "letter": "B"},
+	  {"value": "No one knows Teradata", "letter": "C"},
+	  {"value": "All of the above", "letter": "D"}
+	]
+  },
+  {
+	"round": 1,
+	"position": 2,
+	"question": "How many Ian S. emojis are still active?",
+	"type": "choice",
+	"category": "",
+	"song": "spotify:track:5lO1htX1UPjwyItDLurhR5",
+	"answer": "",
+	"choices":[
+	  {"value": "3", "letter": "A"},
+	  {"value": "5", "letter": "B"},
+	  {"value": "7", "letter": "C"},
+	  {"value": "None - HR Violation", "letter": "D"}
+	]
+  }
+]
