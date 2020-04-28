@@ -4,7 +4,8 @@ import * as socketIo from "socket.io";
 
 import { Message } from "./model";
 import { User } from './model/user.model';
-
+const SERVER_URL = "http://134.122.123.120:8080";
+//const SERVER_URL = "http://localhost:8080";
 export class Server {
     public port:number = 8080;
     public app: any;
@@ -66,7 +67,7 @@ export class Server {
             let postData = {
                 grant_type: 'authorization_code',
                 code: req.params.code,
-                redirect_uri: 'http://3296c2b0.ngrok.io:8080/token',
+                redirect_uri: SERVER_URL+'/token',
                 client_id: '62a8dc0ad3224977a880734a85a3c92a',
                 client_secret: '4d964a1c589d417581330da90b4a36c1'
             };

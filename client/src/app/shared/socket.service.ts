@@ -4,7 +4,8 @@ import { Message } from './message.model';
 
 import * as socketIo from 'socket.io-client';
 
-const SERVER_URL = 'http://3296c2b0.ngrok.io';
+const SERVER_URL = 'http://134.122.123.120:8080';
+//const SERVER_URL = 'http://localhost:8080';
 
 @Injectable()
 export class SocketService {

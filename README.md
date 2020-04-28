@@ -22,7 +22,7 @@ The server will be running on port `8080`
 
 ## Run Client
 
-```bash
+```bashs
 $ cd client
 $ npm install
 $ ng serve -host 0.0.0.0

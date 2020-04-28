@@ -619,7 +619,7 @@ export class HostComponent implements OnInit {
   public importQuestions() {
     this.questionsLoading = true;
     //https://raw.githubusercontent.com/cmbkla/kla-trivia/versions/1.2/games/2018-tpl.json
-    this.http.get('https://raw.githubusercontent.com/cmbkla/kla-trivia/versions/1.2/games/practice.json?t=' + (new Date().getTime()))
+    this.http.get('https://raw.githubusercontent.com/cmbkla/kla-trivia/versions/1.2/games/2018-tpl.json?t=' + (new Date().getTime()))
       .subscribe((game: any[]) => {
         game.forEach((questionData) => {
           if (!this.rounds[questionData['round']]) {
@@ -687,7 +687,7 @@ export class HostComponent implements OnInit {
     window.open(
       'https://accounts.spotify.com/authorize?'
       + 'client_id=62a8dc0ad3224977a880734a85a3c92a'
-      + '&redirect_uri=http%3A%2F%2F3296c2b0.ngrok.io%3A8080%2Ftoken'
+      + '&redirect_uri=http%3A%2F%2F134.122.123.120%3A8080%2Ftoken'
       + '&scope=user-read-playback-state%20user-modify-playback-state%20user-read-currently-playing%20user-read-playback-state'
       + '&response_type=code&show_dialog=true', 'null', winFeature
     );
@@ -705,7 +705,7 @@ export class HostComponent implements OnInit {
   }
 
   private getSpotifyAuth() {
-      this.http.get('http://3296c2b0.ngrok.io:8080/spotifyauth/' + this.spotifyCode
+      this.http.get('http://134.122.123.120:8080/spotifyauth/' + this.spotifyCode
       ).subscribe(result => {
         let callResult = <any>result;
         if (typeof callResult.error != 'undefined') {
