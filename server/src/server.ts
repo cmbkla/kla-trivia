@@ -6,7 +6,7 @@ import { User } from './model/user.model';
 import Socket = SocketIO.Socket;
 
 //const SERVER_URL = "http://134.122.123.120:8080";
-const SERVER_URL = "http://localhost:8080";
+const SERVER_URL = "http://134.122.123.120:8080";
 export class Server {
     public port:number = 8080;
     public app: any;
