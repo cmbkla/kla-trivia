@@ -842,7 +842,7 @@ export class HostComponent implements OnInit {
   private loadSpotifyPlaylist(){
     this.makeSpotifyPlayerApiCall(
       'get',
-      'users/1251303310/playlists/6ohekrzCRPIZdQfDcQ6TvZ/tracks',
+      'users/1251303310/playlists/2EahwGntL3YYX7YIG4Tecl/tracks',
       '',
       {},
       function (result) {
