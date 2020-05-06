@@ -1,6 +1,6 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
   MatButtonModule,
   MatCardModule,
@@ -10,11 +10,10 @@ import {
   MatInputModule,
   MatListModule,
   MatRadioModule
-} from '@angular/material';
-
-import { ChatComponent } from './chat.component';
-import { SocketService } from '../shared/socket.service';
-import { DialogUserComponent } from '../dialog-user/dialog-user.component';
+} from "@angular/material";
+import { ChatComponent } from "./chat.component";
+import { SocketService } from "../shared/socket.service";
+import { DialogUserComponent } from "../dialog-user/dialog-user.component";
 
 @NgModule({
   imports: [
@@ -29,8 +28,16 @@ import { DialogUserComponent } from '../dialog-user/dialog-user.component';
     MatRadioModule,
     ReactiveFormsModule
   ],
-  declarations: [ChatComponent, DialogUserComponent],
-  providers: [MatDialog, SocketService],
-  entryComponents: [DialogUserComponent]
+  declarations: [
+    ChatComponent,
+    DialogUserComponent
+  ],
+  providers: [
+    MatDialog,
+    SocketService
+  ],
+  entryComponents: [
+    DialogUserComponent
+  ]
 })
 export class ChatModule { }

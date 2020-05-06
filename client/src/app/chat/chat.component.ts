@@ -47,11 +47,12 @@ export class ChatComponent implements OnInit {
 
   ngOnInit(): void {
     this.initModel();
+    this.socketService.initSocket();
+    this.initIoConnection();
 
     let team = localStorage.getItem('team');
     if (team && team.length > 0) {
       this.user = JSON.parse(team);
-      this.initIoConnection();
       this.sendNotification(MessageType.JOINED);
     } else {
       // Using timeout due to https://github.com/angular/angular/issues/14748
@@ -71,10 +72,11 @@ export class ChatComponent implements OnInit {
   }
 
   private initIoConnection(): void {
-    this.socketService.initSocket();
-
     this.ioConnection = this.socketService.onMessage()
       .subscribe((message: Message) => {
+        if (!this.user || String(this.user.name).trim().length === 0) {
+          return;
+        }
         if (message.type === MessageType.WHO && message.from.id != this.user.id) {
           this.user.gameId = message.content;
           this.sendNotification(MessageType.WHO, this.user);
@@ -102,6 +104,20 @@ export class ChatComponent implements OnInit {
           }
           return;
         }
+
+        if (message.type === MessageType.UPDATE_TEAM && message.content.id == this.user.id) {
+          this.user = message.content;
+          localStorage.setItem('team', JSON.stringify(this.user));
+        }
+
+        if (message.type === MessageType.REMOVE_TEAM && message.content == this.user.id) {
+          this.initModel();
+          localStorage.removeItem('team');
+          setTimeout(() => {
+            this.openUserPopup(this.defaultDialogUserParams);
+          }, 0);
+        }
+
         if (message.type === MessageType.TIMER_SYNC) {
           this.timeLeft = message.content;
           if (!this.timerStarted && this.timeLeft > 0) {
@@ -140,7 +156,6 @@ export class ChatComponent implements OnInit {
 
       this.user.name = paramsDialog.username;
       localStorage.setItem('team', JSON.stringify(this.user));
-      this.initIoConnection();
       this.sendNotification(MessageType.JOINED);
     });
   }

@@ -3,7 +3,7 @@
 
   <mat-accordion *ngIf="rounds && rounds.length > 0">
     <ng-container *ngFor="let round of rounds">
-      <mat-expansion-panel *ngIf="round">
+      <mat-expansion-panel *ngIf="round" [expanded]="activeQuestionThisRound(round) || isActiveRound(round)">
         <mat-expansion-panel-header>
           <mat-panel-title>
             {{round.name}}
@@ -79,7 +79,7 @@
       </div>
       <div class="timer-display-wrapper" *ngIf="activeQuestion && !activeQuestion.started && !activeQuestion.timerDone && !spotifyLatch">
         <label>Manual Timer</label>
-        <input type="number" [(ngModel)]="manualTime" value="0" />
+        <input type="number" [(ngModel)]="manualTime" />
       </div>
       <p>
         <button color="primary" mat-raised-button (click)="advanceQuestionState()" *ngIf="getQuestionState() && !gameIsComplete()">{{stateLabel}}</button>
@@ -103,7 +103,7 @@
 <div class="score-board-wrapper">
   <h4>Teams:</h4>
   <ul class="team-list">
-    <li *ngFor="let team of teams">
+    <li (click)="openTeamDialog(team)" *ngFor="let team of teams">
       <b>{{team.name}}</b> <button mat-mini-fab class="primary">{{team.score}}</button>
     </li>
   </ul>

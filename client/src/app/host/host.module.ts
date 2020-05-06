@@ -1,18 +1,21 @@
-import { NgModule, Pipe, PipeTransform } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
   MatButtonModule,
-  MatCardModule, MatCheckboxModule, MatChipsModule,
+  MatCardModule,
+  MatCheckboxModule,
   MatDialog,
-  MatDialogModule, MatExpansionModule,
+  MatDialogModule,
+  MatExpansionModule,
   MatIconModule,
   MatInputModule,
-  MatListModule, MatProgressSpinnerModule,
-} from '@angular/material';
-
-import { SocketService } from '../shared/socket.service';
-import { HostComponent } from './host.component';
+  MatListModule,
+  MatProgressSpinnerModule,
+} from "@angular/material";
+import { SocketService } from "../shared/socket.service";
+import { HostComponent } from "./host.component";
+import { DialogTeamComponent } from "../dialog-team/dialog-team.component";
 
 @NgModule({
   imports: [
@@ -30,8 +33,17 @@ import { HostComponent } from './host.component';
     MatProgressSpinnerModule,
     ReactiveFormsModule
   ],
-  declarations: [HostComponent],
-  providers: [MatDialog, SocketService],
-  entryComponents: [HostComponent]
+  declarations: [
+    HostComponent,
+    DialogTeamComponent
+  ],
+  providers: [
+    MatDialog,
+    SocketService
+  ],
+  entryComponents: [
+    HostComponent,
+    DialogTeamComponent
+  ]
 })
 export class HostModule { }

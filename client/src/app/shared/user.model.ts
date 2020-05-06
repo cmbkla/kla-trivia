@@ -6,4 +6,5 @@ export interface User {
     avatar?: string
     score?: number;
     roundScore?: Array<number>
+    questionScoreOverride?: Array<number | string>
 }

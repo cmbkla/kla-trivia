@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { MessageType } from '../shared/messageType';
-import { Message } from '../shared/message.model';
-import { User } from '../shared/user.model';
-import { SocketService } from '../shared/socket.service';
-import { Question } from '../shared/question.model';
-import { QuestionChoices } from '../shared/questionChoices.model';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/timer';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/map';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Component, OnInit } from "@angular/core";
+import { MessageType } from "../shared/messageType";
+import { Message } from "../shared/message.model";
+import { User } from "../shared/user.model";
+import { SocketService } from "../shared/socket.service";
+import { Question } from "../shared/question.model";
+import { QuestionChoices } from "../shared/questionChoices.model";
+import { Observable } from "rxjs/Observable";
+import "rxjs/add/observable/timer";
+import "rxjs/add/operator/take";
+import "rxjs/add/operator/map";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { environment } from "../../environments/environment";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { DialogTeamComponent } from "../dialog-team/dialog-team.component";
 
 const SPOTIFY_API_ENDPOINT = 'https://api.spotify.com/v1/';
 
@@ -28,8 +31,7 @@ export class HostComponent implements OnInit {
   ioConnection: any;
   questionsLoading: boolean;
   questions: Array<Question>;
-  questionCategories: Array<any>;
-  rounds: Array<any>;
+  rounds: {name: string, questions: Question[]}[];
   teams: Array<User>;
   game: Array<any>;
   gameId: number;
@@ -41,7 +43,7 @@ export class HostComponent implements OnInit {
   // subscribe for timer, time left in question, and value to store manual entry of time
   timerInterval: any;
   timeLeft: number;
-  manualTime: number;
+  manualTime: number | string = 0;
 
   // spotify access token and api call management
   spotifyLatch:boolean = false;
@@ -54,7 +56,13 @@ export class HostComponent implements OnInit {
   spotifyMuteState = false;
   spotifyTrackList = [];
 
-  constructor(private socketService: SocketService, private http: HttpClient) { }
+  dialogRef: MatDialogRef<DialogTeamComponent> | null;
+
+  constructor(
+    private socketService: SocketService,
+    private http: HttpClient,
+    public dialog: MatDialog,
+  ) { }
 
   ngOnInit(): void {
     // setup data and connect to socket server
@@ -64,23 +72,23 @@ export class HostComponent implements OnInit {
     this.sendNotification(MessageType.JOINED);
 
     // check for existing game and questions
-/*    let storedGame = localStorage.getItem('game');
+    let storedGame = localStorage.getItem('game');
     if (storedGame) {
       this.game = JSON.parse(storedGame);
       this.gameId = parseInt(localStorage.getItem('gameId'));
-
+      this.teams = JSON.parse(localStorage.getItem('teams'));
+      this.rounds = JSON.parse(localStorage.getItem('rounds'));
       let storedQuestions = localStorage.getItem('questions');
       if (storedQuestions) {
         this.questions = JSON.parse(storedQuestions);
-        //this.buildCategories();
 
         let storedActiveQuestion = localStorage.getItem('activeQuestion');
         try {
           if (storedActiveQuestion && JSON.parse(storedActiveQuestion) != null) {
             this.activeQuestion = JSON.parse(storedActiveQuestion);
             if (this.activeQuestion != null && this.activeQuestion.started) {
-              this.timeLeft = parseInt(localStorage.getItem('timerLeft'));
-              this.startQuestionTimer();
+              this.timeLeft = parseInt(localStorage.getItem('timeLeft'));
+              this.actuallyStartTimer();
             }
           }
         } catch (e) {}
@@ -88,7 +96,7 @@ export class HostComponent implements OnInit {
     } else {
       this.createNewGame(false);
       this.user.gameId = this.gameId;
-    }*/
+    }
 
     // poll to see what teams are connected
     this.sendNotification(MessageType.WHO, this.gameId);
@@ -108,7 +116,6 @@ export class HostComponent implements OnInit {
     this.game = [];
     this.questions = [];
     this.rounds = [];
-    this.questionCategories = [];
     this.gameRounds = 4;
     this.gameQuestionsPerRound = 4;
     this.gamePoints = [5, 10, 20, 40];
@@ -141,9 +148,10 @@ export class HostComponent implements OnInit {
       case MessageType.JOINED:
       case MessageType.WHO:
         if (typeof this.getTeam(message.from.id) === 'undefined') {
-          if (message.from.name !== 'Host' && message.from.name !== 'Display') {
+          if (!!message.from.name && message.from.name !== 'Host' && message.from.name !== 'Display') {
             message.from.score = 0;
             message.from.roundScore = [];
+            message.from.questionScoreOverride = [];
             this.teams.push(message.from);
           }
         }
@@ -151,6 +159,7 @@ export class HostComponent implements OnInit {
         this.sendNotification(MessageType.TIMER_SYNC, this.timeLeft);
         this.calculateScore();
         this.sendNotification(MessageType.UPDATE_SCORE, this.teams);
+        this.storeGameData();
         break;
       case MessageType.TEAM_ANSWER:
         if (!this.teamHasAnswered(message.from.id)) {
@@ -222,7 +231,6 @@ export class HostComponent implements OnInit {
     this.teams = [];
     this.game = [];
     this.questions = [];
-    this.questionCategories = [];
     this.teams = [];
     this.rounds = [];
     this.gameId = this.getRandomId();
@@ -345,7 +353,10 @@ export class HostComponent implements OnInit {
   // game control, checked an answer choice checkbox, revealing it to the players
   public revealChoice(choice: QuestionChoices) {
     choice.revealed = true;
+    const changedIndex = this.activeQuestion.choices.findIndex(qChoice => qChoice.letter === choice.letter);
+    this.activeQuestion.choices[changedIndex] = choice;
     this.sendNotification(MessageType.QUESTION, this.activeQuestion);
+    this.storeGameData();
   }
 
   // reset timer and unsubscribe from Observer
@@ -358,18 +369,19 @@ export class HostComponent implements OnInit {
 
   // game control, start game timer observer
   private startQuestionTimer() {
-    this.activeQuestion.started = true;
     if (this.spotifyLatch) {
       this.startSpotifyPlayback();
     } else {
-      if (this.manualTime < 1) {
+      if (!this.manualTime || parseInt(String(this.manualTime)) < 1) {
         return false;
       }
-      this.timeLeft = this.manualTime;
+      console.log('parsed manual time', this.manualTime, parseInt(String(this.manualTime)));
+      this.timeLeft = parseInt(String(this.manualTime));
       this.activeQuestion.timeAllowed = this.timeLeft;
       this.actuallyStartTimer();
       this.manualTime = 0;
     }
+    this.activeQuestion.started = true;
   }
 
   private actuallyStartTimer() {
@@ -463,6 +475,7 @@ export class HostComponent implements OnInit {
       this.activeQuestion.isDoubler = true;
     }
     this.sendNotification(MessageType.QUESTION, this.activeQuestion);
+    this.storeGameData();
   }
 
   // game control, display the question
@@ -497,6 +510,7 @@ export class HostComponent implements OnInit {
     this.sendNotification(MessageType.UPDATE_SCORE, this.teams);
     this.sendNotification(MessageType.DISPLAY_SCOREBOARD, this.gameIsComplete());
     this.leadboardDisplayed = true;
+    this.storeGameData();
   }
 
   private calculateScore() {
@@ -508,21 +522,30 @@ export class HostComponent implements OnInit {
     let round:number = 0;
     let questionsThisRound:number = 0;
     let teamScoreRound = {};
-    this.game.forEach(gameQuestion => {
+    this.game.forEach((gameQuestion, questionIndex) => {
       questionsThisRound++;
 
       this.teams.forEach(team => {
+        if (typeof team.questionScoreOverride[questionIndex] === 'undefined') {
+          team.questionScoreOverride[questionIndex] = 0;
+        }
         let thisTeamAnswer = gameQuestion.teamAnswers.find(teamAnswer => teamAnswer.team.id === team.id);
 
-        if (thisTeamAnswer && thisTeamAnswer.correct === 'Y') {
+        if ((thisTeamAnswer && thisTeamAnswer.correct === 'Y') || team.questionScoreOverride[questionIndex] > 0) {
+          const answerIsCorrect = (thisTeamAnswer && thisTeamAnswer.correct === 'Y');
           if (typeof teamScoreRound[team.id] === 'undefined') {
             teamScoreRound[team.id] = 0;
           }
-          if (questionsThisRound == this.gameQuestionsPerRound) {
-            teamScoreRound[team.id] = teamScoreRound[team.id] * 2; // double dare
+          if (answerIsCorrect) {
+            if (questionsThisRound == this.gameQuestionsPerRound) {
+              teamScoreRound[team.id] = teamScoreRound[team.id] * 2; // double dare
+            } else {
+              teamScoreRound[team.id] = teamScoreRound[team.id] + points; // regular
+            }
           } else {
-            teamScoreRound[team.id] = teamScoreRound[team.id] + points; // regular
+            teamScoreRound[team.id] = teamScoreRound[team.id] + parseInt(String(team.questionScoreOverride[questionIndex]));
           }
+
         } else if(
           thisTeamAnswer && thisTeamAnswer.correct === 'N' &&
           questionsThisRound == this.gameQuestionsPerRound
@@ -562,12 +585,21 @@ export class HostComponent implements OnInit {
 
   // game control, reset active question and prepare for next question
   private resetForNextQuestion() {
-    this.activeQuestion = null;
     this.leadboardDisplayed = false;
     this.timeLeft = 0;
     this.resetTimer();
+    this.activeQuestion = null;
     this.storeGameData();
     this.sendNotification(MessageType.QUESTION, this.activeQuestion);
+
+    const roundInfo = this.getRoundAndQuestionNumber(true);
+    const round = this.rounds.find(round => round && round.name === "Round " + roundInfo['round']);
+    if (round) {
+      const question = round.questions.find(question => question.questionNumber === roundInfo['question']);
+      if (question) {
+        this.openQuestion(question.id);
+      }
+    }
   }
 
   // determine which round and question # we're on based on the game data
@@ -600,7 +632,7 @@ export class HostComponent implements OnInit {
 
   public gameIsComplete() {
     let gameData: any = this.getRoundAndQuestionNumber(true);
-    if (gameData.round >= this.gameRounds && gameData.question >= this.gameQuestionsPerRound) {
+    if (gameData.round > this.gameRounds) {
       return true;
     }
     return false;
@@ -615,11 +647,10 @@ export class HostComponent implements OnInit {
   }
 
   // import questions from github repo
-  /* This is fugly AF but it does work, so..... */
   public importQuestions() {
     this.questionsLoading = true;
     //https://raw.githubusercontent.com/cmbkla/kla-trivia/versions/1.2/games/2018-tpl.json
-    this.http.get('https://raw.githubusercontent.com/cmbkla/kla-trivia/versions/1.2/games/2018-tpl.json?t=' + (new Date().getTime()))
+    this.http.get('https://raw.githubusercontent.com/cmbkla/kla-trivia/versions/1.2/games/2020-kla.json?t=' + (new Date().getTime()))
       .subscribe((game: any[]) => {
         game.forEach((questionData) => {
           if (!this.rounds[questionData['round']]) {
@@ -656,9 +687,70 @@ export class HostComponent implements OnInit {
       });
   }
 
+  public openTeamDialog(team: User): void {
+    const backup = JSON.parse(JSON.stringify(team));
+    this.dialogRef = this.dialog.open(DialogTeamComponent, {disableClose: true, data: {team: team}});
+    this.dialogRef.afterClosed().subscribe((editedTeam: any) => {
+      if (!editedTeam) {
+        editedTeam = backup;
+      }
+
+      if (typeof editedTeam['delete'] !== 'undefined') {
+        const teamIndex = this.teams.findIndex(team => team.id === editedTeam['delete'].id);
+        if (teamIndex > -1) {
+          this.teams[teamIndex] = null;
+          this.teams = this.teams.filter(t => t);
+        }
+        this.sendNotification(MessageType.REMOVE_TEAM, editedTeam['delete'].id);
+        this.storeGameData();
+        return;
+      }
+
+      this.teams.forEach((lTeam, index) => {
+        if (lTeam.id === editedTeam.id) {
+          this.teams[index] = editedTeam;
+        }
+      });
+      this.calculateScore();
+      this.sendNotification(MessageType.UPDATE_TEAM, team);
+      this.storeGameData();
+    });
+  }
+
+  public activeQuestionThisRound(round: any) {
+    return round && round.questions && this.activeQuestion && round.questions.findIndex(q => this.activeQuestion.id === q.id) > -1;
+  }
+
+  public isActiveRound(round: any) {
+    const currentRoundInfo = this.getRoundAndQuestionNumber(true);
+    return round && currentRoundInfo && round.name === "Round " + currentRoundInfo['round'];
+  }
+
   private storeGameData() {
+    if (!!this.activeQuestion) {
+      this.questions.forEach((question, index) => {
+        if (question.id === this.activeQuestion.id) {
+          this.questions[index] = this.activeQuestion;
+          return false;
+        }
+      });
+      this.rounds.forEach(round => {
+        if (!round) {
+          return true;
+        }
+        round.questions.forEach((question, index) => {
+          if (question.id === this.activeQuestion.id) {
+            round.questions[index] = this.activeQuestion;
+            return false;
+          }
+        });
+      });
+    }
+    localStorage.setItem('questions', JSON.stringify(this.questions));
     localStorage.setItem('rounds', JSON.stringify(this.rounds));
     localStorage.setItem('game', JSON.stringify(this.game));
+    localStorage.setItem('teams', JSON.stringify(this.teams));
+    localStorage.setItem('gameId', JSON.stringify(this.gameId));
     if (this.activeQuestion !== null) {
       localStorage.setItem('activeQuestion', JSON.stringify(this.activeQuestion));
       if (this.timeLeft) {
@@ -670,6 +762,7 @@ export class HostComponent implements OnInit {
     }
   }
 
+  // <editor-fold desc="spotify">
   private getSpotifyCode() {
     let existingCode = localStorage.getItem('spotifyCode');
     // todo: when we try to re-use this code it NEVER works. WHY?
@@ -687,7 +780,7 @@ export class HostComponent implements OnInit {
     window.open(
       'https://accounts.spotify.com/authorize?'
       + 'client_id=62a8dc0ad3224977a880734a85a3c92a'
-      + '&redirect_uri=http%3A%2F%2F134.122.123.120%3A8080%2Ftoken'
+      + '&redirect_uri=' + encodeURIComponent(environment.url + '/token')
       + '&scope=user-read-playback-state%20user-modify-playback-state%20user-read-currently-playing%20user-read-playback-state'
       + '&response_type=code&show_dialog=true', 'null', winFeature
     );
@@ -705,7 +798,7 @@ export class HostComponent implements OnInit {
   }
 
   private getSpotifyAuth() {
-      this.http.get('http://134.122.123.120:8080/spotifyauth/' + this.spotifyCode
+      this.http.get(environment.url + '/spotifyauth/' + this.spotifyCode
       ).subscribe(result => {
         let callResult = <any>result;
         if (typeof callResult.error != 'undefined') {
@@ -944,4 +1037,5 @@ export class HostComponent implements OnInit {
       }.bind(this), 2000);
     });
   }
+  // </editor-fold>
 }

@@ -1,0 +1,226 @@
+﻿[
+  {
+    "round": 1,
+    "position": 1,
+    "question": "These objects are considered leftovers from the formation of the solar system some 4.6 billion years ago.",
+    "type": "choice",
+    "category": "The Stars, Like Dust",
+    "song": "spotify:track:6sy3LkhNFjJWlaeSMNwQ62",
+    "answer": "D",
+    "choices":[
+      {"value": "Van Allen Belt", "letter": "A"},
+      {"value": "Meteoroids", "letter": "B"},
+      {"value": "Asterism", "letter": "C"},
+      {"value": "Asteroids", "letter": "D"}
+    ]
+  },
+  {
+    "round": 1,
+    "position": 2,
+    "question": "In humans, which of these organs belongs to the integumentary system?",
+    "type": "choice",
+    "category": "How The Sausage Gets Made",
+    "song": "spotify:track:4m0Vgr48VFaMYw0Sp1ozJu",
+    "answer": "A",
+    "choices":[
+      {"value": "Skin", "letter": "A"},
+      {"value": "Tonsils", "letter": "B"},
+      {"value": "Liver", "letter": "C"},
+      {"value": "Pharynx", "letter": "D"}
+    ]
+  },
+  {
+    "round": 1,
+    "position": 3,
+    "question": "The song Invisible was a big hit song for which American Idol runner-up in 2003?",
+    "type": "choice",
+    "category": "Who Actually Won?",
+    "song": "spotify:track:1HnTWOJNm9VyT4jDfNp7Ta",
+    "answer": "D",
+    "choices":[
+      {"value": "Ruben Studdard", "letter": "A"},
+      {"value": "Bo Bice", "letter": "B"},
+      {"value": "Kelly Clarkson", "letter": "C"},
+      {"value": "Clay Aiken", "letter": "D"}
+    ]
+  },
+  {
+    "round": 1,
+    "position": 4,
+    "question": "Which two countries border the Dead Sea?",
+    "type": "choice",
+    "category": "Where In The World?",
+    "song": "spotify:track:5rpXM72jfi8d60ZFG8l1i7",
+    "answer": "A",
+    "choices":[
+      {"value": "Jordan and Israel", "letter": "A"},
+      {"value": "Lebanon and Jordan", "letter": "B"},
+      {"value": "Syria and Jordan", "letter": "C"},
+      {"value": "Lebanon and Israel", "letter": "D"}
+    ]
+  },
+  {
+    "round": 2,
+    "position": 1,
+    "question": "What soft drink brand has the same name as an American indigenous tribe?",
+    "type": "choice",
+    "category": "Colonized It",
+    "song": "spotify:track:7sNhXWrg9eW3qRqeuePaIC",
+    "answer": "A",
+    "choices":[
+      {"value": "Shasta", "letter": "A"},
+      {"value": "Faygo", "letter": "B"},
+      {"value": "Vernors", "letter": "C"},
+      {"value": "Pepsi", "letter": "D"}
+    ]
+  },
+  {
+    "round": 2,
+    "position": 2,
+    "question": "According to the Florida Museum of Natural History, you are more likely to be bitten by what while in New York than a shark anywhere in the US?",
+    "type": "choice",
+    "category": "Shark Bait",
+    "song": "spotify:track:7lL2lMWNtzOcf5HnEudNgn",
+    "answer": "C",
+    "choices":[
+      {"value": "Ocelot", "letter": "A"},
+      {"value": "Blue Jay", "letter": "B"},
+      {"value": "A person", "letter": "C"},
+      {"value": "Monkey", "letter": "D"}
+    ]
+  },
+  {
+    "round": 2,
+    "position": 3,
+    "question": "Who is credited with the invention of the potato chip on August 24, 1853?",
+    "type": "choice",
+    "category": "Culinary Genius",
+    "song": "spotify:track:197wogsfnbuA7iMmS4XCeo",
+    "answer": "B",
+    "choices":[
+      {"value": "Frank Chip", "letter": "A"},
+      {"value": "George Crum", "letter": "B"},
+      {"value": "Jim Dorito", "letter": "C"},
+      {"value": "Gottfried Wilhelm Leibniz", "letter": "D"}
+    ]
+  },
+  {
+    "round": 2,
+    "position": 4,
+    "question": "Americans consume 90% of the world's production of part of this plant, which is related to poison ivy. What is it?",
+    "type": "picture",
+    "category": "For Medicinal Purposes, Man",
+    "song": "spotify:track:58eW6VLVDUR6sFfnZTsLrL",
+    "answer": "Cashew",
+    "picture": "https://www.cbc.ca/kidscbc2/content/the_feed/foodgrow_cashew-compressor.jpg"
+  },
+  {
+    "round": 3,
+    "position": 1,
+    "question": "Which of the following group of animals is not referred to as a herd?",
+    "type": "choice",
+    "category": "Me And My Friends",
+    "song": "spotify:track:05oETzWbd4SI33qK2gbJfR",
+    "answer": "A",
+    "choices":[
+      {"value": "Rhinoceroses", "letter": "A"},
+      {"value": "Boars", "letter": "B"},
+      {"value": "Chinchillas", "letter": "C"},
+      {"value": "Walruses", "letter": "D"}
+    ]
+  },
+  {
+    "round": 3,
+    "position": 2,
+    "question": "In the movie Happy Gilmore, Happy takes his soon to be girlfriend, Virginia to an ice skating rink where they slow dance. What was the name of the song playing in the background while they were skating?",
+    "type": "choice",
+    "category": "Stop Looking At Me, Swan",
+    "song": "spotify:track:3zjjzKg16tczCMwckGKGuH",
+    "answer": "D",
+    "choices":[
+      {"value": "50 Ways To Leave Your Lover", "letter": "A"},
+      {"value": "Just You And I", "letter": "B"},
+      {"value": "Baby Come To Me", "letter": "C"},
+      {"value": "Endless  Love", "letter": "D"}
+    ]
+  },
+  {
+    "round": 3,
+    "position": 3,
+    "question": "Athletes from which country took all gold medals in table tennis in the Olympic Games in 2000, 2004 and 2008?",
+    "type": "choice",
+    "category": "Paddle Faster: I Hear Banjos",
+    "song": "spotify:track:4G8gkOterJn0Ywt6uhqbhp",
+    "answer": "A",
+    "choices":[
+      {"value": "China", "letter": "A"},
+      {"value": "South Korea", "letter": "B"},
+      {"value": "Poland", "letter": "C"},
+      {"value": "United States", "letter": "D"}
+    ]
+  },
+  {
+    "round": 3,
+    "position": 4,
+    "question": "Who wrote the book To Kill a Mockingbird?",
+    "type": "fill",
+    "category": "It Isn't Edgar Allen Poe, But Okay",
+    "song": "spotify:track:3y1o7EO6GR71sIXpZ2FdDK",
+    "answer": "Harper Lee"
+  },
+  {
+    "round": 4,
+    "position": 1,
+    "question": "What year was the two dollar bill last printed in the United States?",
+    "type": "choice",
+    "category": "Cash Me Ousside",
+    "song": "spotify:track:3ernkvxpkWap60SeadSqGL",
+    "answer": "A",
+    "choices":[
+      {"value": "2014", "letter": "A"},
+      {"value": "2016", "letter": "B"},
+      {"value": "2020 - Still in print", "letter": "C"},
+      {"value": "1997", "letter": "D"}
+    ]
+  },
+  {
+    "round": 4,
+    "position": 2,
+    "question": "Every year in Yatesville, Georgia there is a celebration of chitlins, called the Chitlin Hoedown. What exactly are chitlins?",
+    "type": "choice",
+    "category": "Now This Is A Party",
+    "song": "spotify:track:5Cg6S5BXG6lXqjijSK9zFh",
+    "answer": "D",
+    "choices":[
+      {"value": "Pig ears", "letter": "A"},
+      {"value": "Cow ears", "letter": "B"},
+      {"value": "Cow feet", "letter": "C"},
+      {"value": "Pig intestines", "letter": "D"}
+    ]
+  },
+  {
+    "round": 4,
+    "position": 3,
+    "question": "Which of these is a genuine mathematical principle?",
+    "type": "choice",
+    "category": "Divisive Denominators",
+    "song": "spotify:track:3omXshBamrREltcf24gYDC",
+    "answer": "A",
+    "choices":[
+      {"value": "The Pigeon Hole Principle", "letter": "A"},
+      {"value": "The Translative Case", "letter": "B"},
+      {"value": "The Second Integral Principle", "letter": "C"},
+      {"value": "The Continuum Principle", "letter": "D"}
+    ]
+  },
+  {
+    "round": 4,
+    "position": 4,
+    "question": "This town is closely linked to the legend of the Loch Ness monster.",
+    "type": "picture",
+    "picture": "https://content.r9cdn.net/rimg/dimg/55/65/f9398811-city-9710-1697d9c6a52.jpg?width=1750&height=1000&xhint=853&yhint=1042&crop=true",
+    "category": "Highlander",
+    "song": "spotify:track:0xpBr84T3FTm9j4D1MdPtk",
+    "answer": "Inverness"
+  }
+]

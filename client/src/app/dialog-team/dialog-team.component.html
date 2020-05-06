@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Edit Team</h2>
+
+<mat-dialog-content>
+  <p>
+    <mat-input-container>
+      <input matInput name="username" placeholder="Team Name"
+             [(ngModel)]="data.name" [formControl]="nameControl" required>
+      <mat-error>This field is required</mat-error>
+      <mat-hint>Team name</mat-hint>
+    </mat-input-container>
+  </p>
+  <ng-container *ngFor="let questionScore of data.questionScoreOverride; let i = index;">
+    <p>
+      <mat-input-container>
+        <input matInput [name]="'questionScoreOverride-' + i + ''" [placeholder]="convertQuestionScoreIndexToQuestionRound(i)"
+               [(ngModel)]="data.questionScoreOverride[i]" [formControl]="questionScoreControls[i]" required>
+        <mat-hint>Score for {{convertQuestionScoreIndexToQuestionRound(i)}}</mat-hint>
+      </mat-input-container>
+    </p>
+  </ng-container>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close color="secondary" (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" mat-dialog-close (click)="onSave()">Save</button>
+  <button mat-raised-button color="warn" mat-dialog-close (click)="onDelete()">Remove Team</button>
+</mat-dialog-actions>

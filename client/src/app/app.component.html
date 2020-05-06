@@ -1,6 +1,6 @@
 <div>
     <mat-toolbar color="primary">
-      <span>KLA Trivia</span>
+      <span>KLA Trivia<ng-container *ngIf="team"> | Team: {{team.name}}</ng-container></span>
     </mat-toolbar>
 
     <div class="app-content">

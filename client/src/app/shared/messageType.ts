@@ -10,5 +10,7 @@ export enum MessageType {
     DISPLAY_SCOREBOARD,
     WHO,
     SYSTEM,
-    TOKEN
+    TOKEN,
+    UPDATE_TEAM,
+    REMOVE_TEAM
 }
